@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -242,9 +243,100 @@ namespace ShortestPath
             return dist1;
         }
 
-        public void TokenDissemination(List<Tuple<Node, Node, int, int>> TokenMessage)
+        //Multpication of tokens Section
+        public List<Tuple<int, int>> TokenMultiplication()
         {
+            List<Token> Nodesiwthtokens = new List<Token>();
+            List<Tuple<int, int>> Tokencounts = new List<Tuple<int, int>>(); // sourcdenode,token recieved from node, token copy number
+            
+            //list of nodes with tokens consisting of the distaces of all the nodes through local edges
+            Nodesiwthtokens = GetEveryNodesDistance();
 
+            // loop until rounds of number of tokens in the system 
+            for (int j = 0; j < Nodesiwthtokens.Count; j++) // usually vertices/number of tokens rounds 
+            {
+                for (int i = 0; i < Nodesiwthtokens.Count; i++)
+                {
+                    List<Tuple<int, int>> dummyTokencounts = new List<Tuple<int, int>>();
+                    dummyTokencounts = MultiplyTokens(Nodesiwthtokens[i], Nodesiwthtokens);
+                    Tokencounts.Add(dummyTokencounts[0]);
+                    Tokencounts.Add(dummyTokencounts[1]);
+                    dummyTokencounts.Clear();
+                }
+            }
+            
+            return Tokencounts;
+
+        }
+
+        private List<Tuple<int, int>> MultiplyTokens(Token token, List<Token> nodesiwthtokens)
+        {
+            Random random = new Random();
+            List<Tuple<int, int>> NodeswithRandommultilpiedcopies = new List<Tuple<int, int>>();
+            for (int i = 0; i < 2; i++)
+            {
+                Thread.Sleep(100); // delay to get random numbers 
+                int node = random.Next(0, nodesiwthtokens.Count - 1);
+                NodeswithRandommultilpiedcopies.Add(Tuple.Create(token.SourceID, nodesiwthtokens[node].SourceID));
+            }
+             return NodeswithRandommultilpiedcopies;
+        }
+
+        private List<Token> GetEveryNodesDistance()
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            Token token;
+
+            LocalEdge localEdge = new LocalEdge();
+            GraphLayout graphLayout = new GraphLayout();
+            IList<Node> Vertices = new List<Node>();
+            List<Token> TokenwithDistanceMessage = new List<Token>();
+            List<Tuple<Node, Node>> Edges = new List<Tuple<Node, Node>>();
+
+
+
+            Vertices = graphLayout.GetGraphLayout();
+            Edges = localEdge.GetGrapgEdges(Vertices);
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                token = tokenDistribution.LocalBroadcast(Edges, Vertices[i]);
+                TokenwithDistanceMessage.Add(token);
+            }
+            return TokenwithDistanceMessage;
+        }
+
+        //nodes with number of copies after token multplication 
+        public List<Tuple<int, int>> GetNumberofNodeswithTokenCopies(List<Tuple<int, int>> tokencopieslistaftermultipication)
+        {
+            List<Tuple<int, int>> MultipleTokenCopiesList = new List<Tuple<int, int>>(tokencopieslistaftermultipication);
+            List<Tuple<int, int>> TokenwithrespectivenumberofCopies = new List<Tuple<int, int>>();//token,copycount
+            List<Token> Nodesiwthtokens = new List<Token>();
+            Tuple<int, int> TokenwithrespectivenumberofCopy;
+            //list of nodes with tokens consisting of the distaces of all the nodes through local edges
+            Nodesiwthtokens = GetEveryNodesDistance();
+
+            for (int i = 0; i < Nodesiwthtokens.Count; i++)
+            {
+                TokenwithrespectivenumberofCopy = GetNumberofCopieswithToken(Nodesiwthtokens[i].SourceID, tokencopieslistaftermultipication);
+                TokenwithrespectivenumberofCopies.Add(TokenwithrespectivenumberofCopy);
+            }
+            return TokenwithrespectivenumberofCopies;
+        }
+
+        private Tuple<int, int> GetNumberofCopieswithToken(int sourceID, List<Tuple<int, int>> tokencopieslistaftermultipication)
+        {
+            
+            int count = 0;
+            for (int i = 0; i < tokencopieslistaftermultipication.Count; i++)
+            {
+                if (sourceID==tokencopieslistaftermultipication[i].Item2)
+                {
+                    count++;
+                }
+            }
+            
+            return Tuple.Create(sourceID, count); 
         }
     }
 }

@@ -42,8 +42,15 @@ namespace ShortestPath
             //tokenDistribution.LocalBroadcast(Edges,nodes[0]);
 
             APSP aPSP = new APSP();
-            var ExactApspshortestpath = aPSP.ExactAPSP(nodes[9],nodes[nodes.Count-1]);
-            Graph.Series["ExactAPSP"].Points.AddXY(nodes[nodes.Count - 3].X, nodes[nodes.Count - 3].Y);
+            Node Sourcenode, Destinationnode;
+            Sourcenode = nodes[0];
+            Destinationnode = nodes[nodes.Count-1];
+
+            var ExactApspshortestpath = aPSP.ExactAPSP(Sourcenode, Destinationnode);
+
+            Graph.Series["SourceNode"].Points.AddXY(Sourcenode.X, Sourcenode.Y);
+            Graph.Series["DestinationNode"].Points.AddXY(Destinationnode.X, Destinationnode.Y);
+
             foreach (var item in ExactApspshortestpath)
             {
                 Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
@@ -56,7 +63,11 @@ namespace ShortestPath
                 Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
             }
 
-
+            // debugging Section 
+            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
+            tokencopies =tokenDistribution.TokenMultiplication();
+            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
         }
         private void Graph_Click(object sender, EventArgs e)
         {

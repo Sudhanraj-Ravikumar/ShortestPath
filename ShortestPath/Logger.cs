@@ -35,7 +35,7 @@ namespace ShortestPath
                 //txtWriter.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
                     //DateTime.Now.ToLongDateString());
                 //txtWriter.WriteLine("  :");
-                txtWriter.WriteLine("  Token created in Node {3} with token message : Source Node {0} destination node {1} distance {2} "
+                txtWriter.WriteLine("  Token created in Node {0} with token message : Source Node {0} destination node {1} distance {2} hop Count {3} "
                     , logMessage1,logmessage2,logmessage3,logmessage4);
                 //txtWriter.WriteLine("-------------------------------");
             }

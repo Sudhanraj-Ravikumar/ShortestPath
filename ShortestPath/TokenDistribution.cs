@@ -275,7 +275,7 @@ namespace ShortestPath
             List<Tuple<int, int>> NodeswithRandommultilpiedcopies = new List<Tuple<int, int>>();
             for (int i = 0; i < 2; i++)
             {
-                Thread.Sleep(100); // delay to get random numbers 
+                Thread.Sleep(300); // delay to get random numbers 
                 int node = random.Next(0, nodesiwthtokens.Count - 1);
                 NodeswithRandommultilpiedcopies.Add(Tuple.Create(token.SourceID, nodesiwthtokens[node].SourceID));
             }
@@ -313,6 +313,7 @@ namespace ShortestPath
             List<Tuple<int, int>> TokenwithrespectivenumberofCopies = new List<Tuple<int, int>>();//token,copycount
             List<Token> Nodesiwthtokens = new List<Token>();
             Tuple<int, int> TokenwithrespectivenumberofCopy;
+            
             //list of nodes with tokens consisting of the distaces of all the nodes through local edges
             Nodesiwthtokens = GetEveryNodesDistance();
 

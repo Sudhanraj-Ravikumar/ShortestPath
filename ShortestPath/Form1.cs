@@ -37,8 +37,8 @@ namespace ShortestPath
            
 
             TokenDistribution tokenDistribution = new TokenDistribution();
-            tokenDistribution.DitributeToken(Edges);
-            tokenDistribution.DistributeTokenusingGlobalEdge();
+            //tokenDistribution.DitributeToken(Edges);
+            //tokenDistribution.DistributeTokenusingGlobalEdge();
             //tokenDistribution.LocalBroadcast(Edges,nodes[0]);
 
             APSP aPSP = new APSP();
@@ -46,28 +46,41 @@ namespace ShortestPath
             Sourcenode = nodes[0];
             Destinationnode = nodes[nodes.Count-1];
 
-            var ExactApspshortestpath = aPSP.ExactAPSP(Sourcenode, Destinationnode);
+            
+            
 
             Graph.Series["SourceNode"].Points.AddXY(Sourcenode.X, Sourcenode.Y);
             Graph.Series["DestinationNode"].Points.AddXY(Destinationnode.X, Destinationnode.Y);
 
-            foreach (var item in ExactApspshortestpath)
-            {
-                Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+            //ExactAlgorithm
+            //var ExactApspshortestpath = aPSP.ExactAPSP(Sourcenode, Destinationnode);
 
-            }
+            //foreach (var item in ExactApspshortestpath)
+            //{
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            //}
             foreach (var item in Edges)
             {
                 Graph.Series["Edges"].Points.AddXY(item.Item1.X, item.Item1.Y);
                 Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
             }
 
+            //Approximate APSP
+            var ApproximateApspshortestpath = aPSP.ApproximateAPSP(Sourcenode, Destinationnode);
+            foreach (var item in ApproximateApspshortestpath)
+            {
+                Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            }
+
             // debugging Section 
-            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
-            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
-            tokencopies =tokenDistribution.TokenMultiplication();
-            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
+            //List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            //List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
+            //tokencopies =tokenDistribution.TokenMultiplication();
+            //tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
         }
         private void Graph_Click(object sender, EventArgs e)
         {

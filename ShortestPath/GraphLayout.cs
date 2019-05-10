@@ -13,8 +13,8 @@ namespace ShortestPath
         //public IList<Node> GetGraphLayout()
         //{
         //    Vertices.Add(new Node(5, 10, 1, false));
-        //    Vertices.Add(new Node(10, 5, 2,false));
-        //    Vertices.Add(new Node(13, 16, 3,false));
+        //    Vertices.Add(new Node(10, 5, 2, false));
+        //    Vertices.Add(new Node(13, 16, 3, false));
         //    Vertices.Add(new Node(15, 11, 4, false));
         //    Vertices.Add(new Node(18, 16, 5, false));
         //    Vertices.Add(new Node(20, 5, 6, false));

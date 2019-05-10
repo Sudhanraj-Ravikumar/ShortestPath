@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace ShortestPath
             GraphLayout graphLayout = new GraphLayout();
             nodes = graphLayout.GetGraphLayout();
 
+
             foreach (var item in nodes)
             {
                 Graph.Series["Vertices"].Points.AddXY(item.X, item.Y);
@@ -46,13 +48,22 @@ namespace ShortestPath
             Sourcenode = nodes[0];
             Destinationnode = nodes[nodes.Count-1];
 
-            
+            SSSP sSSP = new SSSP();
             
 
             Graph.Series["SourceNode"].Points.AddXY(Sourcenode.X, Sourcenode.Y);
             Graph.Series["DestinationNode"].Points.AddXY(Destinationnode.X, Destinationnode.Y);
 
-            //ExactAlgorithm
+            foreach (var item in Edges)
+            {
+                Graph.Series["Edges"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
+            }
+
+            ////ExactAlgorithm
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
             //var ExactApspshortestpath = aPSP.ExactAPSP(Sourcenode, Destinationnode);
 
             //foreach (var item in ExactApspshortestpath)
@@ -61,26 +72,43 @@ namespace ShortestPath
             //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
 
             //}
-            foreach (var item in Edges)
-            {
-                Graph.Series["Edges"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
-            }
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
 
-            //Approximate APSP
-            var ApproximateApspshortestpath = aPSP.ApproximateAPSP(Sourcenode, Destinationnode);
-            foreach (var item in ApproximateApspshortestpath)
+            ////Approximate APSP
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var ApproximateApspshortestpath = aPSP.ApproximateAPSP(Sourcenode, Destinationnode);
+            //foreach (var item in ApproximateApspshortestpath)
+            //{
+            //    Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            //    Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            //}
+
+            //Exact SSSP
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
+            foreach (var item in SSSPExactshortestpath)
             {
-                Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+                Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                
 
             }
+            stopwatch.Stop();
+            var time = stopwatch.Elapsed;
+            int i = 0;
 
             // debugging Section 
             //List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
             //List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
             //tokencopies =tokenDistribution.TokenMultiplication();
             //tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
+
         }
         private void Graph_Click(object sender, EventArgs e)
         {

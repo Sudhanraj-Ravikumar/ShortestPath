@@ -13,6 +13,50 @@ namespace ShortestPath
         List<Tuple<Node, Node>> LocalIncidentEdges = new List<Tuple<Node, Node>>();
        
 
+        //public List<Tuple<Node, Node>> GetGrapgEdges(IList<Node> vertices)
+        //{
+        //    Vertices = graphLayout.GetGraphLayout();
+        //    vertices = Vertices;
+        //    if (vertices?.Count != 0)
+        //    {
+        //        //vertex 1 Edges
+        //        AddEdges(vertices[0], vertices[1]);
+        //        AddEdges(vertices[0], vertices[2]);
+
+        //        //vertex 3 Edges
+        //        AddEdges(vertices[2], vertices[3]);
+        //        AddEdges(vertices[2], vertices[0]);
+
+        //        //vertex 4 Edges
+        //        AddEdges(vertices[3], vertices[2]);
+        //        AddEdges(vertices[3], vertices[5]);
+        //        AddEdges(vertices[3], vertices[1]);
+
+        //        //vertex 6 Edges
+        //        AddEdges(vertices[5], vertices[6]);
+        //        AddEdges(vertices[5], vertices[4]);
+        //        AddEdges(vertices[5], vertices[3]);
+
+
+        //        //vertex 5 Edges
+        //        AddEdges(vertices[4], vertices[6]);
+        //        AddEdges(vertices[4], vertices[5]);
+        //        AddEdges(vertices[4], vertices[2]);
+                
+
+        //        //vertex 2 Edges
+        //        AddEdges(vertices[1], vertices[3]);
+        //        AddEdges(vertices[1], vertices[5]);
+        //        AddEdges(vertices[1], vertices[0]);
+
+        //        //vertex 7 Edges
+        //        AddEdges(vertices[6], vertices[4]);
+        //        AddEdges(vertices[6], vertices[5]);
+                
+        //    }
+        //    return LocalIncidentEdges;
+           
+        //}
         public List<Tuple<Node, Node>> GetGrapgEdges(IList<Node> vertices)
         {
             Vertices = graphLayout.GetGraphLayout();
@@ -113,7 +157,7 @@ namespace ShortestPath
 
             }
             return LocalIncidentEdges;
-           
+
         }
         public List<Tuple<Node, Node>> AddEdges(Node vertex1, Node vertex2)
         {

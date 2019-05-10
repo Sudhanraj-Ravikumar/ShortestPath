@@ -16,8 +16,10 @@ namespace ShortestPath
             List<Token> SkeletonGraphs = new List<Token>();
             List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
 
+            
             //EverynodesDistance = GetEveryNodesDistance();
             EveryNodesDistancWithinMaxHopDistance =ConstructExactSkeletonGraph();
+            
             SkeletonGraphs = getSkeletongroupofGraphs(SourceNode,DestinationNode, EveryNodesDistancWithinMaxHopDistance,out shortpath);
 
             //debugging to check the token counts
@@ -70,10 +72,10 @@ namespace ShortestPath
 
             tokencopies = tokenDistribution.TokenMultiplication();
             tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
-            EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
+            EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
 
             //Marked nodes threshold of number of copies
-            int TokenCopiesThreshold=45;
+            int TokenCopiesThreshold = 45;
 
             for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
             {
@@ -90,9 +92,39 @@ namespace ShortestPath
             return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
         }
 
+        private List<Token> ConstructExactSkeletonGraph()
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EveryNodesDistancWithinMaxHopDistanceofMarkedNodes = new List<Token>();
+            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
+
+            tokencopies = tokenDistribution.TokenMultiplication();
+            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
+            EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
+
+            //Marked nodes threshold of number of copies
+            int TokenCopiesThreshold = 100;
+
+            for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < tokencopieswithrespectivenodes.Count; j++)
+                {
+                    if (EveryNodesDistancWithinMaxHopDistance[i].SourceID == tokencopieswithrespectivenodes[j].Item1 && tokencopieswithrespectivenodes[j].Item2 <= TokenCopiesThreshold)
+                    {
+                        EveryNodesDistancWithinMaxHopDistanceofMarkedNodes.Add(EveryNodesDistancWithinMaxHopDistance[i]);
+                    }
+                }
+
+            }
+
+            return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
+        }
+
 
         /*node to nodes within the max hop distance (Exact)*/
-        private List<Token> ConstructExactSkeletonGraph()
+        private List<Token> ConstructSkeletonGraph()
         {
             TokenDistribution tokenDistribution = new TokenDistribution();
             Token token;

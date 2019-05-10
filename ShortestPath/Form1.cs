@@ -88,15 +88,30 @@ namespace ShortestPath
 
             //}
 
-            //Exact SSSP
+            ////Exact SSSP
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPExactshortestpath)
+            //{
+            //    Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                
+
+            //}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            //Approximate SSSP
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
-            foreach (var item in SSSPExactshortestpath)
+            var SSSPApproximateshortestpath = sSSP.ApproximateSSSP(Sourcenode, Destinationnode);
+            foreach (var item in SSSPApproximateshortestpath)
             {
-                Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                
+                Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
 
             }
             stopwatch.Stop();

@@ -25,6 +25,23 @@ namespace ShortestPath
             return shortpath;
         }
 
+        public List<Tuple<Node, int>> ApproximateSSSP(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Tuple<Token, int>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, int>>();
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructApproximateSkeletonGraph();
+
+            SkeletonGraphswithShortDistanceroute = getShortdistance(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
+            shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
         private List<Tuple<Node, int>> GEtNodeswithrespectivefromlis(List<Tuple<Token, int>> skeletonGraphswithShortDistanceroute)
         {
             GraphLayout graphLayout = new GraphLayout();
@@ -77,6 +94,35 @@ namespace ShortestPath
             return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
         }
 
+        private List<Token> ConstructApproximateSkeletonGraph()
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EveryNodesDistancWithinMaxHopDistanceofMarkedNodes = new List<Token>();
+            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
+
+            tokencopies = tokenDistribution.TokenMultiplication();
+            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
+            EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
+
+            //Marked nodes threshold of number of copies
+            int TokenCopiesThreshold = 45;
+
+            for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < tokencopieswithrespectivenodes.Count; j++)
+                {
+                    if (EveryNodesDistancWithinMaxHopDistance[i].SourceID == tokencopieswithrespectivenodes[j].Item1 && tokencopieswithrespectivenodes[j].Item2 <= TokenCopiesThreshold)
+                    {
+                        EveryNodesDistancWithinMaxHopDistanceofMarkedNodes.Add(EveryNodesDistancWithinMaxHopDistance[i]);
+                    }
+                }
+
+            }
+
+            return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
+        }
         private List<Token> ConstructSkeletonGraph()
         {
             TokenDistribution tokenDistribution = new TokenDistribution();
@@ -170,20 +216,20 @@ namespace ShortestPath
             }
             NodeswithcandidatedistnceDummy.Clear();
 
-            NodeswithcandidatedistnceDummy = GetTheNodesWithinTwoHopWithUpdatedistance(NodeswithcandidatedistnceList, Dummy, visitedNodes);
-            var nodewithlessdistance2 = NodeswithcandidatedistnceDummy.OrderBy(x => x.Item2).First();
-            ShortestRoute.Add(nodewithlessdistance2);
-            Dummy.Clear();
+            //NodeswithcandidatedistnceDummy = GetTheNodesWithinTwoHopWithUpdatedistance(NodeswithcandidatedistnceList, Dummy, visitedNodes);
+            //var nodewithlessdistance2 = NodeswithcandidatedistnceDummy.OrderBy(x => x.Item2).First();
+            //ShortestRoute.Add(nodewithlessdistance2);
+            //Dummy.Clear();
 
-            //only this iteration for 20 nodes
-            foreach (var item in NodeswithcandidatedistnceDummy)
-            {
-                Nodeswithcandidatedistnce.Add(item);
-                NodeswithcandidatedistncewithRounds.Add(Tuple.Create(item.Item1, item.Item2, 3));
+            ////only this iteration for 20 nodes
+            //foreach (var item in NodeswithcandidatedistnceDummy)
+            //{
+            //    Nodeswithcandidatedistnce.Add(item);
+            //    NodeswithcandidatedistncewithRounds.Add(Tuple.Create(item.Item1, item.Item2, 3));
 
-                Dummy.Add(item);
-            }
-            NodeswithcandidatedistnceDummy.Clear();
+            //    Dummy.Add(item);
+            //}
+            //NodeswithcandidatedistnceDummy.Clear();
 
             return ShortestRoute;
 

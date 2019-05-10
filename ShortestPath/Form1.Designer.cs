@@ -37,9 +37,10 @@
             System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.Graph = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
@@ -98,6 +99,12 @@
             series7.MarkerColor = System.Drawing.Color.Blue;
             series7.MarkerSize = 13;
             series7.Name = "ExactSSSP";
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series8.Legend = "Legend1";
+            series8.MarkerColor = System.Drawing.Color.Blue;
+            series8.MarkerSize = 13;
+            series8.Name = "ApproximateSSSP";
             this.Graph.Series.Add(series1);
             this.Graph.Series.Add(series2);
             this.Graph.Series.Add(series3);
@@ -105,6 +112,7 @@
             this.Graph.Series.Add(series5);
             this.Graph.Series.Add(series6);
             this.Graph.Series.Add(series7);
+            this.Graph.Series.Add(series8);
             this.Graph.Size = new System.Drawing.Size(558, 349);
             this.Graph.TabIndex = 0;
             this.Graph.Text = "chart1";
@@ -118,10 +126,10 @@
             this.chart2.Legends.Add(legend2);
             this.chart2.Location = new System.Drawing.Point(38, 22);
             this.chart2.Name = "chart2";
-            series8.ChartArea = "ChartArea1";
-            series8.Legend = "Legend1";
-            series8.Name = "Series1";
-            this.chart2.Series.Add(series8);
+            series9.ChartArea = "ChartArea1";
+            series9.Legend = "Legend1";
+            series9.Name = "Series1";
+            this.chart2.Series.Add(series9);
             this.chart2.Size = new System.Drawing.Size(8, 8);
             this.chart2.TabIndex = 1;
             this.chart2.Text = "chart2";

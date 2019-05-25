@@ -243,14 +243,58 @@ namespace ShortestPath
             return dist1;
         }
 
+        ////Multpication of tokens Section with normal random Selection
+        //public List<Tuple<int, int>> TokenMultiplication()
+        //{
+        //    List<Token> Nodesiwthtokens = new List<Token>();
+        //    List<Tuple<int, int>> Tokencounts = new List<Tuple<int, int>>(); // sourcdenode,token recieved from node, token copy number
+
+        //    //list of nodes with tokens consisting of the distaces of all the nodes through local edges
+        //    Nodesiwthtokens = GetEveryNodesDistance();
+
+        //    // loop until rounds of number of tokens in the system 
+        //    for (int j = 0; j < Nodesiwthtokens.Count; j++) // usually vertices/number of tokens rounds 
+        //    {
+        //        for (int i = 0; i < Nodesiwthtokens.Count; i++)
+        //        {
+        //            List<Tuple<int, int>> dummyTokencounts = new List<Tuple<int, int>>();
+        //            dummyTokencounts = MultiplyTokens(Nodesiwthtokens[i], Nodesiwthtokens);
+        //            Tokencounts.Add(dummyTokencounts[0]);
+        //            Tokencounts.Add(dummyTokencounts[1]);
+        //            dummyTokencounts.Clear();
+        //        }
+        //    }
+
+        //    return Tokencounts;
+
+        //}
+
+        //private List<Tuple<int, int>> MultiplyTokens(Token token, List<Token> nodesiwthtokens)
+        //{
+        //    Random random = new Random();
+        //    List<Tuple<int, int>> NodeswithRandommultilpiedcopies = new List<Tuple<int, int>>();
+        //    for (int i = 0; i < 2; i++)
+        //    {
+        //        Thread.Sleep(300); // delay to get random numbers 
+        //        int node = random.Next(0, nodesiwthtokens.Count - 1);
+        //        NodeswithRandommultilpiedcopies.Add(Tuple.Create(token.SourceID, nodesiwthtokens[node].SourceID));
+        //    }
+        //     return NodeswithRandommultilpiedcopies;
+        //}
+
+
+        List<Tuple<int, bool>> RandomNumberList = new List<Tuple<int, bool>>();
         //Multpication of tokens Section
         public List<Tuple<int, int>> TokenMultiplication()
         {
             List<Token> Nodesiwthtokens = new List<Token>();
             List<Tuple<int, int>> Tokencounts = new List<Tuple<int, int>>(); // sourcdenode,token recieved from node, token copy number
-            
+
             //list of nodes with tokens consisting of the distaces of all the nodes through local edges
             Nodesiwthtokens = GetEveryNodesDistance();
+
+            //get intitial radomnumber list 
+            RandomNumberList = GetRandomNumberList(Nodesiwthtokens);
 
             // loop until rounds of number of tokens in the system 
             for (int j = 0; j < Nodesiwthtokens.Count; j++) // usually vertices/number of tokens rounds 
@@ -258,30 +302,122 @@ namespace ShortestPath
                 for (int i = 0; i < Nodesiwthtokens.Count; i++)
                 {
                     List<Tuple<int, int>> dummyTokencounts = new List<Tuple<int, int>>();
-                    dummyTokencounts = MultiplyTokens(Nodesiwthtokens[i], Nodesiwthtokens);
+                    dummyTokencounts = MultiplyTokens(Nodesiwthtokens[i], Nodesiwthtokens, RandomNumberList);
                     Tokencounts.Add(dummyTokencounts[0]);
                     Tokencounts.Add(dummyTokencounts[1]);
                     dummyTokencounts.Clear();
                 }
             }
-            
+
             return Tokencounts;
 
         }
-
-        private List<Tuple<int, int>> MultiplyTokens(Token token, List<Token> nodesiwthtokens)
+        
+        private List<Tuple<int, int>> MultiplyTokens(Token token, List<Token> nodesiwthtokens, List<Tuple<int, bool>> InitialStageofRandomNumber)
         {
             Random random = new Random();
+            
             List<Tuple<int, int>> NodeswithRandommultilpiedcopies = new List<Tuple<int, int>>();
-            for (int i = 0; i < 2; i++)
+            List<Token> Duplicatenodesiwthtokens = new List<Token>(nodesiwthtokens);
+            List<Tuple<int, bool>> UpdatetheRandomList = new List<Tuple<int, bool>>();
+            bool CheckRandomNumberalreadyselected;
+            bool CheckToResetRandom;
+
+            for (int i = 0; i < 1000; i++)
             {
-                Thread.Sleep(300); // delay to get random numbers 
+                 
                 int node = random.Next(0, nodesiwthtokens.Count - 1);
-                NodeswithRandommultilpiedcopies.Add(Tuple.Create(token.SourceID, nodesiwthtokens[node].SourceID));
+                CheckRandomNumberalreadyselected = GetCheckRandomNumberUnique(InitialStageofRandomNumber, node);
+                if (!CheckRandomNumberalreadyselected)
+                {
+                    NodeswithRandommultilpiedcopies.Add(Tuple.Create(token.SourceID, nodesiwthtokens[node].SourceID));
+                    UpdatetheRandomList = GetUpdateRandomList(node, RandomNumberList);
+                    RandomNumberList = UpdatetheRandomList;
+
+                    //reset if all the randoms are selected
+                    CheckToResetRandom = GetChecktoReset(RandomNumberList);
+                    if (CheckToResetRandom)
+                    {
+                        RandomNumberList.Clear();
+                        RandomNumberList = GetRandomNumberList(nodesiwthtokens);
+                    }
+
+                }
+                if (NodeswithRandommultilpiedcopies.Count == 2)
+                {
+                    break;
+                }
+                
             }
-             return NodeswithRandommultilpiedcopies;
+            return NodeswithRandommultilpiedcopies;
         }
 
+        private bool GetChecktoReset(List<Tuple<int, bool>> randomNumberList)
+        {
+            int count = 0;
+            for (int i = 0; i < randomNumberList.Count; i++)
+            {
+                if (randomNumberList[i].Item2 == true)
+                {
+                    count++;
+                }
+            }
+            if (count == randomNumberList.Count - 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private List<Tuple<int, bool>> GetUpdateRandomList(int node, List<Tuple<int, bool>> randomNumberList)
+        {
+            List<Tuple<int, bool>> updatedlist = new List<Tuple<int, bool>>();
+
+            for (int i = 0; i < randomNumberList.Count; i++)
+            {
+                if (randomNumberList[i].Item1==node)
+                {
+                    updatedlist.Add(Tuple.Create(randomNumberList[i].Item1, true));
+                }
+                else
+                {
+                    updatedlist.Add(Tuple.Create(randomNumberList[i].Item1, randomNumberList[i].Item2));
+                }
+                
+            }
+            return updatedlist;
+        }
+
+        private bool GetCheckRandomNumberUnique(List<Tuple<int, bool>> InitialStageofRandomNumber, int node)
+        {
+            for (int i = 0; i < InitialStageofRandomNumber.Count; i++)
+            {
+                if (InitialStageofRandomNumber[i].Item1==node)
+                {
+                    if (InitialStageofRandomNumber[i].Item2==false)
+                    {
+                        return false;
+                        
+                    }
+                    
+                }
+            }
+            return true;
+            
+        }
+
+        private List<Tuple<int, bool>> GetRandomNumberList(List<Token> nodesiwthtokens)
+        {
+            List<Tuple<int, bool>> InitialStageofRandomNumber = new List<Tuple<int, bool>>(); // intially the ramdom with bool as false because its not selected
+            for (int i = 0; i < nodesiwthtokens.Count; i++)
+            {
+                InitialStageofRandomNumber.Add(Tuple.Create(nodesiwthtokens[i].SourceID, false));
+            }
+            return InitialStageofRandomNumber;
+        }
         private List<Token> GetEveryNodesDistance()
         {
             TokenDistribution tokenDistribution = new TokenDistribution();

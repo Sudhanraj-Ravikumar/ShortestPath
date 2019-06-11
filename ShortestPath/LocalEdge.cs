@@ -11,7 +11,7 @@ namespace ShortestPath
         IList<Node> Vertices = new List<Node>();
         GraphLayout graphLayout = new GraphLayout();
         List<Tuple<Node, Node>> LocalIncidentEdges = new List<Tuple<Node, Node>>();
-       
+
 
         //public List<Tuple<Node, Node>> GetGrapgEdges(IList<Node> vertices)
         //{
@@ -42,7 +42,7 @@ namespace ShortestPath
         //        AddEdges(vertices[4], vertices[6]);
         //        AddEdges(vertices[4], vertices[5]);
         //        AddEdges(vertices[4], vertices[2]);
-                
+
 
         //        //vertex 2 Edges
         //        AddEdges(vertices[1], vertices[3]);
@@ -52,10 +52,10 @@ namespace ShortestPath
         //        //vertex 7 Edges
         //        AddEdges(vertices[6], vertices[4]);
         //        AddEdges(vertices[6], vertices[5]);
-                
+
         //    }
         //    return LocalIncidentEdges;
-           
+
         //}
         public List<Tuple<Node, Node>> GetGrapgEdges(IList<Node> vertices)
         {

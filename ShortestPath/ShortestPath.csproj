@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSP.cs" />
+    <Compile Include="Djikitras.cs" />
     <Compile Include="GlobalEdge.cs" />
     <Compile Include="IEdge.cs" />
     <Compile Include="LocalEdge.cs" />

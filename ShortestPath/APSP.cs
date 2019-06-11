@@ -16,11 +16,15 @@ namespace ShortestPath
             List<Token> SkeletonGraphs = new List<Token>();
             List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
 
+            int numberofmessages;
             
             //EverynodesDistance = GetEveryNodesDistance();
             EveryNodesDistancWithinMaxHopDistance =ConstructExactSkeletonGraph();
             
             SkeletonGraphs = getSkeletongroupofGraphs(SourceNode,DestinationNode, EveryNodesDistancWithinMaxHopDistance,out shortpath);
+
+            // number of message as paramenter study 
+            numberofmessages = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
 
             //debugging to check the token counts
             return shortpath;
@@ -30,10 +34,12 @@ namespace ShortestPath
             List<Token> SkeletonGraphs = new List<Token>();
             List<Token> EveryNodesDistancWithinMaxHopDistanceMarkedNodes = new List<Token>();
             List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
+            int numberofnodes;
 
             EveryNodesDistancWithinMaxHopDistanceMarkedNodes = ConstructApproximateSkeletonGraph();
             SkeletonGraphs = getSkeletongroupofGraphs(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceMarkedNodes, out shortpath);
 
+            numberofnodes = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistanceMarkedNodes);
             return shortpath;
 
         }
@@ -278,6 +284,17 @@ namespace ShortestPath
             MinDistanceVertices.Add(Tuple.Create(MinDistanceVerticesoderederewithMinimumDistance.Item1, MinDistanceVerticesoderederewithMinimumDistance.Item2,
                 MinDistanceVerticesoderederewithMinimumDistance.Item3, MinDistanceVerticesoderederewithMinimumDistance.Item4));
             return MinDistanceVertices[0];
+        }
+
+        //get the total number token messages passed
+        private int GetNumberofTokens(List<Token> ListofToken)
+        {
+            int count = 0;
+            for (int i = 0; i < ListofToken.Count; i++)
+            {
+                count = count + ListofToken[i].TokenMessage.Count;
+            }
+            return count;
         }
 
         private bool CheckAlreadyVisitedVertices(List<int> GivenID, int SourceID)

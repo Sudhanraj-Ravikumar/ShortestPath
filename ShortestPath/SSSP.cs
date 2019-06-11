@@ -14,13 +14,16 @@ namespace ShortestPath
             List<Token> EverynodesDistance = new List<Token>();
             List<Tuple<Token,int>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token,int>>();
             List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
-
+            int numberofmessage;
 
 
             EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
 
             SkeletonGraphswithShortDistanceroute = getShortdistance(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
             shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            // number of token 
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
             //debugging to check the token counts
             return shortpath;
         }
@@ -31,13 +34,16 @@ namespace ShortestPath
             List<Token> EverynodesDistance = new List<Token>();
             List<Tuple<Token, int>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, int>>();
             List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
-
+            int numberofmessage;
 
 
             EveryNodesDistancWithinMaxHopDistance = ConstructApproximateSkeletonGraph();
 
             SkeletonGraphswithShortDistanceroute = getShortdistance(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
             shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            //number of message
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
             //debugging to check the token counts
             return shortpath;
         }
@@ -107,7 +113,7 @@ namespace ShortestPath
             EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
 
             //Marked nodes threshold of number of copies
-            int TokenCopiesThreshold = 45;
+            int TokenCopiesThreshold = 43;
 
             for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
             {
@@ -326,6 +332,24 @@ namespace ShortestPath
                 }
             }
             return NodesWithUpdatedDistance;
+        }
+        private int GetNumberofTokens(List<Token> ListofToken)
+        {
+            int count = 0;
+            List<Token> ListofTokenwithin2hop = new List<Token>();
+
+            for (int i = 0; i < ListofToken.Count; i++)
+            {
+                for (int j = 0; j < ListofToken[i].TokenMessage.Count; j++)
+                {
+                    if (ListofToken[i].TokenMessage[j].Item4<3)
+                    {
+                        count++;
+                    }
+                   
+                }
+            }
+            return count;
         }
 
         private bool CheckVisitedNodes(int iD, List<Token> visitedNodes)

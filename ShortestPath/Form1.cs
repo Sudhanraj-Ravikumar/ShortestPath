@@ -87,36 +87,39 @@ namespace ShortestPath
             //    Graph.Series["ApproximateAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
 
             //}
-
-            ////Exact SSSP
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-
-            //var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
-            //foreach (var item in SSSPExactshortestpath)
-            //{
-            //    Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                
-
-            //}
             //stopwatch.Stop();
             //var time = stopwatch.Elapsed;
             //int i = 0;
 
-            //Approximate SSSP
+            //Exact SSSP
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var SSSPApproximateshortestpath = sSSP.ApproximateSSSP(Sourcenode, Destinationnode);
-            foreach (var item in SSSPApproximateshortestpath)
+            var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
+            foreach (var item in SSSPExactshortestpath)
             {
-                Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
             }
             stopwatch.Stop();
             var time = stopwatch.Elapsed;
             int i = 0;
+
+            ////Approximate SSSP
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var SSSPApproximateshortestpath = sSSP.ApproximateSSSP(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            //}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
 
             // debugging Section 
             //List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();

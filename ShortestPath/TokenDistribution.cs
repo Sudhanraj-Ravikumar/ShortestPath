@@ -235,7 +235,7 @@ namespace ShortestPath
                 return false;
             }
         }
-        private int GetDistance(Node item1, Node item2)
+        public int GetDistance(Node item1, Node item2)
         {
             int dist, dist1;
             dist = (int)Math.Abs(((item2.X - item1.X) * (item2.X - item1.X)) + ((item2.Y - item1.Y) * (item2.Y - item1.Y)));

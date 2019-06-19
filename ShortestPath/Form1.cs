@@ -91,20 +91,20 @@ namespace ShortestPath
             //var time = stopwatch.Elapsed;
             //int i = 0;
 
-            //Exact SSSP
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            ////Exact SSSP
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
 
-            var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
-            foreach (var item in SSSPExactshortestpath)
-            {
-                Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            //var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPExactshortestpath)
+            //{
+            //    Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            }
-            stopwatch.Stop();
-            var time = stopwatch.Elapsed;
-            int i = 0;
+            //}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
 
             ////Approximate SSSP
             //Stopwatch stopwatch = new Stopwatch();
@@ -120,6 +120,22 @@ namespace ShortestPath
             //stopwatch.Stop();
             //var time = stopwatch.Elapsed;
             //int i = 0;
+
+
+            //Approximate SSSP111
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var SSSPApproximateshortestpath = sSSP.Approximate1SSSP(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            //}
+            //stopwatch.Stop();
+            var time = stopwatch.Elapsed;
+            int i = 0;
 
             // debugging Section 
             //List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();

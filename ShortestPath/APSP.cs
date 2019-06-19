@@ -17,6 +17,8 @@ namespace ShortestPath
             List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
 
             int numberofmessages;
+            int numberofrounds;
+
             
             //EverynodesDistance = GetEveryNodesDistance();
             EveryNodesDistancWithinMaxHopDistance =ConstructExactSkeletonGraph();
@@ -26,20 +28,32 @@ namespace ShortestPath
             // number of message as paramenter study 
             numberofmessages = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
 
+            //total rounds for parameter study
+            numberofrounds = GetTotalExactalgorithmRounds(shortpath);
+            
             //debugging to check the token counts
             return shortpath;
         }
+
+        
+
         public List<Tuple<Node, Node, int, int>> ApproximateAPSP(Node SourceNode, Node DestinationNode)
         {
             List<Token> SkeletonGraphs = new List<Token>();
             List<Token> EveryNodesDistancWithinMaxHopDistanceMarkedNodes = new List<Token>();
             List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
-            int numberofnodes;
+            int numberofmessages;
+            int numberofrounds;
 
             EveryNodesDistancWithinMaxHopDistanceMarkedNodes = ConstructApproximateSkeletonGraph();
             SkeletonGraphs = getSkeletongroupofGraphs(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceMarkedNodes, out shortpath);
 
-            numberofnodes = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistanceMarkedNodes);
+            // total number of message parameter study
+            numberofmessages = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistanceMarkedNodes);
+
+            //total rounds for parameter study
+            numberofrounds = GetTotalApproxalgorithmRounds(shortpath);
+
             return shortpath;
 
         }
@@ -295,6 +309,63 @@ namespace ShortestPath
                 count = count + ListofToken[i].TokenMessage.Count;
             }
             return count;
+        }
+
+        //Get the total number of the rounds
+        private int GetnumberofroundsforLocalExploration(List<Token> nodeswitheveryDistance)
+        {
+            int RoundCounts;
+            List<int> hops = new List<int>();
+            for (int i = 0; i < nodeswitheveryDistance.Count; i++)
+            {
+                for (int j = 0; j < nodeswitheveryDistance[i].TokenMessage.Count; j++)
+                {
+                    hops.Add(nodeswitheveryDistance[i].TokenMessage[j].Item4);
+                }
+            }
+            RoundCounts = hops.Max();
+
+            return RoundCounts;
+        }
+
+        // Exact rounds
+        private int GetTotalExactalgorithmRounds(List<Tuple<Node, Node, int, int>> shortpath)
+        {
+            int localexplorationrounds;
+            List<int> hops = new List<int>();
+            List<Token> tokenwithlocalexplorationdistance = new List<Token>();
+            int totalrounds;
+
+            tokenwithlocalexplorationdistance = GetEveryNodesDistance();
+            localexplorationrounds = GetnumberofroundsforLocalExploration(tokenwithlocalexplorationdistance);
+
+            for (int i = 0; i < shortpath?.Count; i++)
+            {
+                hops.Add(shortpath[i].Item4);
+            }
+
+            totalrounds = shortpath.Count * (hops.Max()) + localexplorationrounds;
+            return totalrounds;
+        }
+
+        //approx Rounds
+        private int GetTotalApproxalgorithmRounds(List<Tuple<Node, Node, int, int>> shortpath)
+        {
+            int localexplorationrounds;
+            List<int> hops = new List<int>();
+            List<Token> tokenwithlocalexplorationdistance = new List<Token>();
+            int totalrounds;
+
+            tokenwithlocalexplorationdistance = GetEveryNodesDistance();
+            localexplorationrounds = GetnumberofroundsforLocalExploration(tokenwithlocalexplorationdistance);
+
+            for (int i = 0; i < shortpath?.Count; i++)
+            {
+                hops.Add(shortpath[i].Item4);
+            }
+
+            totalrounds = shortpath.Count + localexplorationrounds;
+            return totalrounds;
         }
 
         private bool CheckAlreadyVisitedVertices(List<int> GivenID, int SourceID)

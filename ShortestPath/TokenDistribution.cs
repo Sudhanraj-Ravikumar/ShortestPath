@@ -10,9 +10,6 @@ namespace ShortestPath
     public class TokenDistribution
     {
        
-        
-        
-
         public List<Tuple<Node, Token>> DitributeToken(List<Tuple<Node, Node>> Edges)
         {
             GraphLayout graphLayout = new GraphLayout();

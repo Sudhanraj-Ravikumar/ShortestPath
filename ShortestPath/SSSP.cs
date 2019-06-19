@@ -8,6 +8,8 @@ namespace ShortestPath
 {
     public class SSSP
     {
+        List<Token> nonVistedNodebranches = new List<Token>();
+        List<int> VisisitedNodes = new List<int>();
         public List<Tuple<Node, int>> ExactSSSP(Node SourceNode, Node DestinationNode)
         {
             List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
@@ -27,6 +29,8 @@ namespace ShortestPath
             //debugging to check the token counts
             return shortpath;
         }
+
+        
 
         public List<Tuple<Node, int>> ApproximateSSSP(Node SourceNode, Node DestinationNode)
         {
@@ -48,6 +52,50 @@ namespace ShortestPath
             return shortpath;
         }
 
+        public List<Tuple<Node, int>> Approximate1SSSP(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Token> SkeletonGraphswithShortDistanceroute = new List<Token>();
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructApproximateSkeletonGraph();
+
+            //total count * 2 rounds hint 
+            SkeletonGraphswithShortDistanceroute = getShortdistanceApprox1(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
+            
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            //number of message
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        //approx Exact
+        public List<Tuple<Node, int>> ApproximateexactSSSP(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Token> SkeletonGraphswithShortDistanceroute = new List<Token>();
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
+
+            //total count * 2 rounds hint 
+            SkeletonGraphswithShortDistanceroute = getShortdistanceApprox1(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
+
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            //number of message
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
         private List<Tuple<Node, int>> GEtNodeswithrespectivefromlis(List<Tuple<Token, int>> skeletonGraphswithShortDistanceroute)
         {
             GraphLayout graphLayout = new GraphLayout();
@@ -352,6 +400,99 @@ namespace ShortestPath
             return count;
         }
 
+        
+        private List<Token> getShortdistanceApprox1(Node sourceNode, Node destinationNode, List<Token> everyNodesDistancWithinMaxHopDistance)
+        {
+
+            List<Token> NonMarkedNodesExploring = new List<Token>();
+            List<Token> NonMarkedNodesExploringduplicate = new List<Token>();
+            List<Token> NonMarkedNodesExploringdistinct = new List<Token>();
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                if (everyNodesDistancWithinMaxHopDistance[i].SourceID==sourceNode.ID)
+                {
+                    VisisitedNodes.Add(sourceNode.ID);
+                    nonVistedNodebranches.Add(everyNodesDistancWithinMaxHopDistance[i]);
+                    break;
+                }
+            }
+
+            int cnt=0;
+            while (cnt < 10)
+            {
+                NonMarkedNodesExploringduplicate = GettheNextNonExlporedNodeWithTwoHops(everyNodesDistancWithinMaxHopDistance);
+                foreach (var item in NonMarkedNodesExploringduplicate)
+                {
+                    NonMarkedNodesExploring.Add(item);
+                }
+                NonMarkedNodesExploringduplicate.Clear();
+                cnt++;
+            }
+
+            var nonmarked = NonMarkedNodesExploring.Select(x => x.SourceID).Distinct().ToList();
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < nonmarked.Count; j++)
+                {
+                    if (everyNodesDistancWithinMaxHopDistance[i].SourceID==nonmarked[j])
+                    {
+                        NonMarkedNodesExploringdistinct.Add(everyNodesDistancWithinMaxHopDistance[i]);
+                        break;
+                    }
+                }
+
+            }
+
+            return NonMarkedNodesExploringdistinct;
+        }
+
+        private List<Token> GettheNextNonExlporedNodeWithTwoHops(List<Token> everyNodesDistancWithinMaxHopDistance)
+        {
+            List<int> nonvistednodeint = new List<int>();
+            List<Token> nonVisitedNodebranchesduplicate = new List<Token>();
+            for (int i = 0; i < nonVistedNodebranches.Count; i++)
+            {
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistance.Count; j++)
+                {
+                    if (nonVistedNodebranches[i].SourceID==everyNodesDistancWithinMaxHopDistance[j].SourceID)
+                    {
+
+                        for (int k = 0; k < everyNodesDistancWithinMaxHopDistance[j].TokenMessage.Count; k++)
+                        {
+                            if (everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item4<=1 
+                                && !CheckVisitedNodesint(everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item2.ID,VisisitedNodes))
+                            {
+                                VisisitedNodes.Add(everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item2.ID);
+                            }
+                            if (everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item4 == 2
+                                && !CheckVisitedNodesint(everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item2.ID, VisisitedNodes))
+                            {
+                                nonvistednodeint.Add(everyNodesDistancWithinMaxHopDistance[j].TokenMessage[k].Item2.ID);
+                            }
+                        }
+                    }
+                }
+            }
+
+            nonVistedNodebranches.Clear();
+            for (int i = 0; i < nonvistednodeint.Count; i++)
+            {
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistance.Count; j++)
+                {
+                    if (nonvistednodeint[i] == everyNodesDistancWithinMaxHopDistance[j].SourceID)
+                    {
+                        nonVistedNodebranches.Add(everyNodesDistancWithinMaxHopDistance[j]);
+                        nonVisitedNodebranchesduplicate.Add(everyNodesDistancWithinMaxHopDistance[j]);
+                    }
+                }
+            }
+
+            return nonVisitedNodebranchesduplicate;
+            
+        }
+
         private bool CheckVisitedNodes(int iD, List<Token> visitedNodes)
         {
             int count = 0;
@@ -364,6 +505,27 @@ namespace ShortestPath
                 }
             }
             if (count>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool CheckVisitedNodesint(int iD, List<int> visitedNodes)
+        {
+            int count = 0;
+
+            for (int i = 0; i < visitedNodes.Count; i++)
+            {
+                if (visitedNodes[i] == iD)
+                {
+                    count++;
+                }
+            }
+            if (count > 0)
             {
                 return true;
             }

@@ -111,6 +111,35 @@ namespace ShortestPath
             return shortpath;
         }
 
+        //Dijikitras from Paper
+        public List<Tuple<Node, int>> DijikitrasAlgorithm(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Tuple<Token, double>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = new List<Tuple<Token, double>>();
+
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
+            EveryNodesDistancWithinMaxHopDistanceinStartingphase = GetintiialphaseNodedetails(SourceNode, EveryNodesDistancWithinMaxHopDistance);
+            EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = GetWithinHopDistanceDijikitrasNeighbourNodes(EveryNodesDistancWithinMaxHopDistanceinStartingphase);
+
+            SkeletonGraphswithShortDistanceroute = getShortdistanceDjikitrasAlgorithm(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance);
+
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            // number of token 
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        //Filter within the max hop range 
+        // max hop here is 2
         private List<Tuple<Token, double>> GetWithinHopDistanceNeighbourNodes(List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
         {
             List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue = new List<Tuple<Token, double>>();
@@ -130,6 +159,31 @@ namespace ShortestPath
                 Token token = new Token(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID,TokenwithinHop);
                 everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue.Add(Tuple.Create(token, everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item2));
                 
+            }
+            return everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue;
+        }
+
+        //in one hop
+        //Dijikitras are mades to with one hop
+        private List<Tuple<Token, double>> GetWithinHopDistanceDijikitrasNeighbourNodes(List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue = new List<Tuple<Token, double>>();
+
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+            {
+                List<Tuple<Node, Node, int, int>> TokenwithinHop = new List<Tuple<Node, Node, int, int>>();
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage.Count; j++)
+                {
+                    //hop count = 1
+                    if (everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage[j].Item4 <= 1)
+                    {
+                        TokenwithinHop.Add(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage[j]);
+                    }
+                }
+                Token token = new Token(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID, TokenwithinHop);
+                everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue.Add(Tuple.Create(token, everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item2));
+
             }
             return everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue;
         }
@@ -490,6 +544,88 @@ namespace ShortestPath
             return everyNodesDistancWithinMaxHopDistanceinStartingphase;
         }
 
+        //Dijikitras
+        private List<Tuple<Token, double>> getShortdistanceDjikitrasAlgorithm(Node sourceNode, Node destinationNode, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphasedummy = new List<Tuple<Token, double>>();
+            ExploredVisitedNodes.Add(1500); //just to make the list non emply when i =1
+
+            int count = 0;
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+            {
+
+                if (!CheckVisitedNodesint(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID, ExploredVisitedNodes))
+                {
+                    UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase =
+                        GetupdatedDjikitrasDistancelist(everyNodesDistancWithinMaxHopDistanceinStartingphase[i],
+                        everyNodesDistancWithinMaxHopDistanceinStartingphase);
+                    count++;
+                    //everyNodesDistancWithinMaxHopDistanceinStartingphase.Clear();
+                    everyNodesDistancWithinMaxHopDistanceinStartingphase = UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase;
+                }
+            }
+            return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+        }
+
+        private List<Tuple<Token, double>> GetupdatedDjikitrasDistancelist(Tuple<Token, double> tuple, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> updateddistnace = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> updateddistnacelist = new List<Tuple<Token, double>>();
+
+            for (int i = 0; i < tuple.Item1.TokenMessage.Count; i++)
+            {
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; j++)
+                {
+                    if (tuple.Item1.TokenMessage[i].Item2.ID == everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1.SourceID
+                        /*&& !CheckVisitedNodesint(tuple.Item1.TokenMessage[i].Item2.ID, ExploredVisitedNodes)*/)
+                    {
+                        if ((tuple.Item1.TokenMessage[i].Item3 + tuple.Item2) < everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item2)
+                        {
+                            updateddistnace.Add(Tuple.Create(everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1, tuple.Item1.TokenMessage[i].Item3 + tuple.Item2));
+                        }
+
+                    }
+
+                }
+
+            }
+
+            //explored nodes within one hop
+            ExploredVisitedNodes.Add(tuple.Item1.SourceID);
+            
+            ExploredVisitedNodes = ExploredVisitedNodes.Distinct().ToList();
+
+            int count = 0;
+
+            if (updateddistnace?.Count > 0)
+            {
+                for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+                {
+                    for (int j = 0; j < updateddistnace.Count; j++)
+                    {
+                        if (updateddistnace[j].Item1.SourceID == everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID)
+                        {
+                            updateddistnacelist.Add(updateddistnace[j]);
+                            count++;
+                            break;
+                        }
+
+                    }
+                    if (count == 0)
+                    {
+                        updateddistnacelist.Add(everyNodesDistancWithinMaxHopDistanceinStartingphase[i]);
+                    }
+                    count = 0;
+                }
+                return updateddistnacelist;
+            }
+            else
+            {
+                return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+            }
+        }
         private List<Tuple<Token, double>> GetupdatedDistancelist(Tuple<Token, double> tuple, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
         {
             List<Tuple<Token, double>> updateddistnace = new List<Tuple<Token, double>>();

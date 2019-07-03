@@ -169,17 +169,32 @@ namespace ShortestPath
             //var time = stopwatch.Elapsed;
             //int i = 0;
 
-            //Approximate own algorithm new
+            ////Approximate own algorithm new
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var SSSPApproximateshortestpath = sSSP.ApprpxAprroxSSPAlgorithm(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            //}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            //Dijikitras algorithm new
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var SSSPApproximateshortestpath = sSSP.ApprpxAprroxSSPAlgorithm(Sourcenode, Destinationnode);
-            foreach (var item in SSSPApproximateshortestpath)
-            {
-                Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            var SSSPApproximateshortestpath = sSSP.DijikitrasAlgorithm(Sourcenode, Destinationnode);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            }
+            //}
             stopwatch.Stop();
             var time = stopwatch.Elapsed;
             int i = 0;

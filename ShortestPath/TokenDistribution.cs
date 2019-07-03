@@ -294,14 +294,17 @@ namespace ShortestPath
             RandomNumberList = GetRandomNumberList(Nodesiwthtokens);
 
             // loop until rounds of number of tokens in the system 
-            for (int j = 0; j < Nodesiwthtokens.Count; j++) // usually vertices/number of tokens rounds 
+            for (int j = 0; j < Nodesiwthtokens?.Count; j++) // usually vertices/number of tokens rounds 
             {
-                for (int i = 0; i < Nodesiwthtokens.Count; i++)
+                for (int i = 0; i < Nodesiwthtokens?.Count; i++)
                 {
                     List<Tuple<int, int>> dummyTokencounts = new List<Tuple<int, int>>();
                     dummyTokencounts = MultiplyTokens(Nodesiwthtokens[i], Nodesiwthtokens, RandomNumberList);
-                    Tokencounts.Add(dummyTokencounts[0]);
-                    Tokencounts.Add(dummyTokencounts[1]);
+                    if (dummyTokencounts?.Count > 1)
+                    {
+                        Tokencounts.Add(dummyTokencounts[0]);
+                        Tokencounts.Add(dummyTokencounts[1]);
+                    }
                     dummyTokencounts.Clear();
                 }
             }

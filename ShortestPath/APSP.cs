@@ -95,7 +95,8 @@ namespace ShortestPath
             EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
 
             //Marked nodes threshold of number of copies
-            int TokenCopiesThreshold = 45;
+            // 20=45. 50=112, 86=178
+            int TokenCopiesThreshold = 115;
 
             for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
             {
@@ -124,8 +125,9 @@ namespace ShortestPath
             tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
             EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
 
-            //Marked nodes threshold of number of copies
-            int TokenCopiesThreshold = 100;
+            //Marked nodes threshold of number of copies 
+            // 20 =100 ; 50= 200
+            int TokenCopiesThreshold = 1000;
 
             for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
             {
@@ -204,7 +206,12 @@ namespace ShortestPath
 
 
             var MinDistanceVertices = SkeletonGraph[0].TokenMessage.OrderBy(l => l.Item3).First();
-            Shortpath.Add(MinDistanceVertices);
+            if (MinDistanceVertices != null)
+            {
+
+                Shortpath.Add(MinDistanceVertices);
+            }
+            
             
             //var MinDistanceVertices = SkeletonGraph.OrderBy(x => x.TokenMessage.Min(y => y.Item3)).First();
             for (int i = 0; i < SkeletonGraph[0].TokenMessage.Count; i++)
@@ -220,7 +227,11 @@ namespace ShortestPath
             {
                 
                 var MinDistanceVertices2 = GetNextShotestVertix(Shortpath[j], DuplicateEveryNodesTokenwitmessage, VistiedNodes,destinationnode);
-                Shortpath.Add(MinDistanceVertices2);
+                if (MinDistanceVertices2!=null)
+                {
+
+                    Shortpath.Add(MinDistanceVertices2);
+                }
                
                 if (CheckDestinationNode(VistiedNodes,destinationnode.ID))
                 {
@@ -247,14 +258,14 @@ namespace ShortestPath
             List<Tuple<Node, Node, int, int, int>> TokenwithDestinationDistanceDetails = new List<Tuple<Node, Node, int, int, int>>();
            EverynodesDistance = GetEveryNodesDistance();
 
-            for (int i = 0; i < duplicate.Count; i++)
+            for (int i = 0; i < duplicate?.Count; i++)
             {
                 if (minDistanceVertices.Item2.ID==duplicate[i].SourceID)
                 {
                     DuplicateSkelitonGraph.Add(duplicate[i]);
                 }
             }
-            for (int i = 0; i < DuplicateSkelitonGraph[0].TokenMessage.Count; i++)
+            for (int i = 0; i < DuplicateSkelitonGraph[0].TokenMessage?.Count; i++)
             {
                 if (CheckAlreadyVisitedVertices(vistiedNodes,DuplicateSkelitonGraph[0].TokenMessage[i].Item2.ID))
                 {
@@ -263,7 +274,7 @@ namespace ShortestPath
             }
 
             dummy.Add(new Token(DuplicateSkelitonGraph[0].SourceID, dummyTokenMessage));
-            for (int i = 0; i < dummy[0].TokenMessage.Count; i++)
+            for (int i = 0; i < dummy[0].TokenMessage?.Count; i++)
             {
 
                 VistiedNodes.Add(dummy[0].TokenMessage[i].Item2.ID);
@@ -272,9 +283,9 @@ namespace ShortestPath
             
 
             //Finding the total minimum distance to destination
-            for (int i = 0; i < dummy[0].TokenMessage.Count; i++)
+            for (int i = 0; i < dummy[0].TokenMessage?.Count; i++)
             {
-                for (int j = 0; j < EverynodesDistance.Count; j++)
+                for (int j = 0; j < EverynodesDistance?.Count; j++)
                 {
                     if (dummy[0].TokenMessage[i].Item2.ID==EverynodesDistance[j].SourceID)
                     {
@@ -291,13 +302,21 @@ namespace ShortestPath
 
                 }
             }
+            if (TokenwithDestinationDistanceDetails?.Count!=0)
+            {
 
-            var MinDistanceVerticesoderederewithMinimumDistance = TokenwithDestinationDistanceDetails.OrderBy(l => l.Item5).First();
-            List<Tuple<Node, Node, int, int>> MinDistanceVertices = new List<Tuple<Node, Node, int, int>>();
 
-            MinDistanceVertices.Add(Tuple.Create(MinDistanceVerticesoderederewithMinimumDistance.Item1, MinDistanceVerticesoderederewithMinimumDistance.Item2,
-                MinDistanceVerticesoderederewithMinimumDistance.Item3, MinDistanceVerticesoderederewithMinimumDistance.Item4));
-            return MinDistanceVertices[0];
+                var MinDistanceVerticesoderederewithMinimumDistance = TokenwithDestinationDistanceDetails.OrderBy(l => l.Item5).First();
+                List<Tuple<Node, Node, int, int>> MinDistanceVertices = new List<Tuple<Node, Node, int, int>>();
+
+                MinDistanceVertices.Add(Tuple.Create(MinDistanceVerticesoderederewithMinimumDistance.Item1, MinDistanceVerticesoderederewithMinimumDistance.Item2,
+                    MinDistanceVerticesoderederewithMinimumDistance.Item3, MinDistanceVerticesoderederewithMinimumDistance.Item4));
+                return MinDistanceVertices[0];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         //get the total number token messages passed

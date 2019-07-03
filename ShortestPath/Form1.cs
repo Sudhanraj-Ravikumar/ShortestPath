@@ -122,18 +122,65 @@ namespace ShortestPath
             //int i = 0;
 
 
-            //Approximate SSSP111
+            //////Approximate SSSP111
+            ////Stopwatch stopwatch = new Stopwatch();
+            ////stopwatch.Start();
+
+            ////var SSSPApproximateshortestpath = sSSP.Approximate1SSSP(Sourcenode, Destinationnode);
+            //////foreach (var item in SSSPApproximateshortestpath)
+            //////{
+            //////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            //////}
+            ////stopwatch.Stop();
+            ////var time = stopwatch.Elapsed;
+            ////int i = 0;
+
+            ////Exact SSSP algorrithm from paper
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var SSSPApproximateshortestpath = sSSP.ExactSSSPAlgorithm(Sourcenode, Destinationnode);
+            ////foreach (var item in SSSPApproximateshortestpath)
+            ////{
+            ////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            ////}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            //Approximate SSSP algorrithm from paper
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+
+            //var SSSPApproximateshortestpath = sSSP.ApproxSSSPAlgorithm(Sourcenode, Destinationnode);
+            ////foreach (var item in SSSPApproximateshortestpath)
+            ////{
+            ////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+
+
+            ////}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            //Approximate own algorithm new
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var SSSPApproximateshortestpath = sSSP.Approximate1SSSP(Sourcenode, Destinationnode);
-            //foreach (var item in SSSPApproximateshortestpath)
-            //{
-            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            var SSSPApproximateshortestpath = sSSP.ApprpxAprroxSSPAlgorithm(Sourcenode, Destinationnode);
+            foreach (var item in SSSPApproximateshortestpath)
+            {
+                Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            //}
-            //stopwatch.Stop();
+            }
+            stopwatch.Stop();
             var time = stopwatch.Elapsed;
             int i = 0;
 

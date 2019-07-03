@@ -25,12 +25,114 @@ namespace ShortestPath
             shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
 
             // number of token 
+            numberofmessage =  GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        //ExactSSSP from Paper
+        public List<Tuple<Node, int>> ExactSSSPAlgorithm(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Tuple<Token, double>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = new List<Tuple<Token, double>>();
+
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
+            EveryNodesDistancWithinMaxHopDistanceinStartingphase = GetintiialphaseNodedetails(SourceNode, EveryNodesDistancWithinMaxHopDistance);
+            EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = GetWithinHopDistanceNeighbourNodes(EveryNodesDistancWithinMaxHopDistanceinStartingphase);
+
+            SkeletonGraphswithShortDistanceroute = getShortdistanceAlgorithm(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance);
+
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            // number of token 
             numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
             //debugging to check the token counts
             return shortpath;
         }
 
-        
+        //AppoxSSSP from Paper
+        public List<Tuple<Node, int>> ApproxSSSPAlgorithm(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Tuple<Token, double>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = new List<Tuple<Token, double>>();
+
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructApproximateSkeletonGraph();
+            EveryNodesDistancWithinMaxHopDistanceinStartingphase = GetintiialphaseNodedetails(SourceNode, EveryNodesDistancWithinMaxHopDistance);
+            EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = GetWithinHopDistanceNeighbourNodes(EveryNodesDistancWithinMaxHopDistanceinStartingphase);
+
+            SkeletonGraphswithShortDistanceroute = getShortdistanceAlgorithm(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance);
+
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            // number of token 
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        //Approx sssp own from own ides
+        public List<Tuple<Node, int>> ApprpxAprroxSSPAlgorithm(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Tuple<Token, double>> SkeletonGraphswithShortDistanceroute = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = new List<Tuple<Token, double>>();
+
+            List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            int numberofmessage;
+
+
+            EveryNodesDistancWithinMaxHopDistance = ConstructExactSkeletonGraph();
+            EveryNodesDistancWithinMaxHopDistanceinStartingphase = GetintiialphaseNodedetails(SourceNode, EveryNodesDistancWithinMaxHopDistance);
+            EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = GetWithinHopDistanceNeighbourNodes(EveryNodesDistancWithinMaxHopDistanceinStartingphase);
+
+            SkeletonGraphswithShortDistanceroute = getShortdistanceOWnAlgorithm(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance);
+
+            //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
+
+            // number of token 
+            numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        private List<Tuple<Token, double>> GetWithinHopDistanceNeighbourNodes(List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue = new List<Tuple<Token, double>>();
+            
+            
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+            {
+                List<Tuple<Node, Node, int, int>> TokenwithinHop = new List<Tuple<Node, Node, int, int>>();
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage.Count; j++)
+                {
+                    //hop count = 2
+                    if (everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage[j].Item4<=2)
+                    {
+                        TokenwithinHop.Add(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.TokenMessage[j]);
+                    }
+                }
+                Token token = new Token(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID,TokenwithinHop);
+                everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue.Add(Tuple.Create(token, everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item2));
+                
+            }
+            return everyNodesDistancWithinMaxHopDistanceinStartingphasereturnvalue;
+        }
 
         public List<Tuple<Node, int>> ApproximateSSSP(Node SourceNode, Node DestinationNode)
         {
@@ -58,20 +160,55 @@ namespace ShortestPath
             List<Token> EverynodesDistance = new List<Token>();
             List<Token> SkeletonGraphswithShortDistanceroute = new List<Token>();
             List<Tuple<Node, int>> shortpath = new List<Tuple<Node, int>>();
+            List<Tuple<Token, double>> SkeletonGraphswithShortDistanceroute1 = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = new List<Tuple<Token, double>>();
+            List<Token> SourceandDestinationTkoennodes = new List<Token>();
+
             int numberofmessage;
 
 
             EveryNodesDistancWithinMaxHopDistance = ConstructApproximateSkeletonGraph();
 
+            SourceandDestinationTkoennodes = getSourceandDestinationNodeTokens(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
+            if (SourceandDestinationTkoennodes?.Count != 0)
+            {
+                foreach (var item in SourceandDestinationTkoennodes)
+                {
+                    SkeletonGraphswithShortDistanceroute.Add(item);
+                }
+            }
+
             //total count * 2 rounds hint 
             SkeletonGraphswithShortDistanceroute = getShortdistanceApprox1(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance);
             
+            ////just trial from new exact sssp paper algorithm
+            //EveryNodesDistancWithinMaxHopDistanceinStartingphase = GetintiialphaseNodedetails(SourceNode, SkeletonGraphswithShortDistanceroute);
+            //EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance = GetWithinHopDistanceNeighbourNodes(EveryNodesDistancWithinMaxHopDistanceinStartingphase);
+
+            //SkeletonGraphswithShortDistanceroute1 = getShortdistanceAlgorithm(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistanceinStartingphasewithinhopDistance);
+
             //shortpath = GEtNodeswithrespectivefromlis(SkeletonGraphswithShortDistanceroute);
 
             //number of message
             numberofmessage = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
             //debugging to check the token counts
             return shortpath;
+        }
+
+        private List<Token> getSourceandDestinationNodeTokens(Node sourceNode, Node destinationNode, List<Token> everyNodesDistancWithinMaxHopDistance)
+        {
+            List<Token> returnvalue = new List<Token>();
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                if (everyNodesDistancWithinMaxHopDistance[i].SourceID == sourceNode.ID || 
+                    everyNodesDistancWithinMaxHopDistance[i].DestinationID== destinationNode.ID)
+                {
+                    returnvalue.Add(everyNodesDistancWithinMaxHopDistance[i]);
+                }
+            }
+            return returnvalue;
         }
 
         //approx Exact
@@ -131,7 +268,7 @@ namespace ShortestPath
             EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph();
 
             //Marked nodes threshold of number of copies
-            int TokenCopiesThreshold = 100;
+            int TokenCopiesThreshold = 1000;
 
             for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
             {
@@ -287,6 +424,188 @@ namespace ShortestPath
 
             return ShortestRoute;
 
+        }
+
+        //Source node with 0 and other nodes with inifinty distance. 
+        //Its about the phase before starting the algorthm to updatye with the distances
+        //starting phase
+        private List<Tuple<Token, double>> GetintiialphaseNodedetails(Node sourceNode, List<Token> everyNodesDistancWithinMaxHopDistance)
+        {
+            List<Tuple<Token, double>> NodeswithdistanceTuple = new List<Tuple<Token, double>>();
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                if (everyNodesDistancWithinMaxHopDistance[i].SourceID == sourceNode.ID)
+                {
+                    NodeswithdistanceTuple.Add(Tuple.Create(everyNodesDistancWithinMaxHopDistance[i], (double)0));
+                    
+                }
+                else
+                {
+                    NodeswithdistanceTuple.Add(Tuple.Create(everyNodesDistancWithinMaxHopDistance[i], double.PositiveInfinity));
+                }
+            }
+            return NodeswithdistanceTuple;
+
+        }
+
+        private List<Tuple<Token, double>> getShortdistanceAlgorithm(Node sourceNode, Node destinationNode, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphasedummy = new List<Tuple<Token, double>>();
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+            {
+                UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase =
+                    GetupdatedDistancelistexact(everyNodesDistancWithinMaxHopDistanceinStartingphase[i],
+                    everyNodesDistancWithinMaxHopDistanceinStartingphase);
+
+                //everyNodesDistancWithinMaxHopDistanceinStartingphase.Clear();
+                everyNodesDistancWithinMaxHopDistanceinStartingphase=UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase;
+            }
+            return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+        }
+
+        List<int> ExploredVisitedNodes = new List<int>();
+        private List<Tuple<Token, double>> getShortdistanceOWnAlgorithm(Node sourceNode, Node destinationNode, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphasedummy = new List<Tuple<Token, double>>();
+            ExploredVisitedNodes.Add(1500); //just to make the list non emply when i =1
+
+            int count = 0;
+
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+            {
+                
+                if(!CheckVisitedNodesint(everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID,ExploredVisitedNodes))
+                {
+                    UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase =
+                        GetupdatedDistancelist(everyNodesDistancWithinMaxHopDistanceinStartingphase[i],
+                        everyNodesDistancWithinMaxHopDistanceinStartingphase);
+                    count++;
+                    //everyNodesDistancWithinMaxHopDistanceinStartingphase.Clear();
+                    everyNodesDistancWithinMaxHopDistanceinStartingphase = UpdatedeveryNodesDistancWithinMaxHopDistanceinStartingphase;
+                }
+            }
+            return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+        }
+
+        private List<Tuple<Token, double>> GetupdatedDistancelist(Tuple<Token, double> tuple, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> updateddistnace = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> updateddistnacelist = new List<Tuple<Token, double>>();
+
+            for (int i = 0; i < tuple.Item1.TokenMessage.Count; i++)
+            {
+                for (int j = 0; j <everyNodesDistancWithinMaxHopDistanceinStartingphase.Count ; j++)
+                {
+                    if (tuple.Item1.TokenMessage[i].Item2.ID == everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1.SourceID
+                        /*&& !CheckVisitedNodesint(tuple.Item1.TokenMessage[i].Item2.ID, ExploredVisitedNodes)*/)
+                    {
+                        if ((tuple.Item1.TokenMessage[i].Item3 + tuple.Item2)<everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item2)
+                        {
+                            updateddistnace.Add(Tuple.Create(everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1, tuple.Item1.TokenMessage[i].Item3 + tuple.Item2));
+                        }
+
+                    }
+
+                }
+
+            }
+
+            //explored nodes within one hop
+            ExploredVisitedNodes.Add(tuple.Item1.SourceID);
+            for (int i = 0; i < tuple.Item1.TokenMessage.Count; i++)
+            {
+                if (tuple.Item1.TokenMessage[i].Item4<2)
+                {
+                    ExploredVisitedNodes.Add(tuple.Item1.TokenMessage[i].Item2.ID);
+                }
+            }
+            ExploredVisitedNodes=ExploredVisitedNodes.Distinct().ToList();
+
+            int count = 0;
+
+            if (updateddistnace?.Count > 0)
+            {
+                for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+                {
+                    for (int j = 0; j < updateddistnace.Count; j++)
+                    {
+                        if (updateddistnace[j].Item1.SourceID == everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID)
+                        {
+                            updateddistnacelist.Add(updateddistnace[j]);
+                            count++;
+                            break;
+                        }
+
+                    }
+                    if (count == 0)
+                    {
+                        updateddistnacelist.Add(everyNodesDistancWithinMaxHopDistanceinStartingphase[i]);
+                    }
+                    count = 0;
+                }
+                return updateddistnacelist;
+            }
+            else
+            {
+                return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+            }
+        }
+        private List<Tuple<Token, double>> GetupdatedDistancelistexact(Tuple<Token, double> tuple, List<Tuple<Token, double>> everyNodesDistancWithinMaxHopDistanceinStartingphase)
+        {
+            List<Tuple<Token, double>> updateddistnace = new List<Tuple<Token, double>>();
+            List<Tuple<Token, double>> updateddistnacelist = new List<Tuple<Token, double>>();
+
+            for (int i = 0; i < tuple.Item1.TokenMessage.Count; i++)
+            {
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; j++)
+                {
+                    if (tuple.Item1.TokenMessage[i].Item2.ID == everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1.SourceID
+                        )
+                    {
+                        if ((tuple.Item1.TokenMessage[i].Item3 + tuple.Item2) < everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item2)
+                        {
+                            updateddistnace.Add(Tuple.Create(everyNodesDistancWithinMaxHopDistanceinStartingphase[j].Item1, tuple.Item1.TokenMessage[i].Item3 + tuple.Item2));
+                        }
+
+                    }
+
+                }
+
+            }
+
+            
+
+            int count = 0;
+
+            if (updateddistnace?.Count > 0)
+            {
+                for (int i = 0; i < everyNodesDistancWithinMaxHopDistanceinStartingphase.Count; i++)
+                {
+                    for (int j = 0; j < updateddistnace.Count; j++)
+                    {
+                        if (updateddistnace[j].Item1.SourceID == everyNodesDistancWithinMaxHopDistanceinStartingphase[i].Item1.SourceID)
+                        {
+                            updateddistnacelist.Add(updateddistnace[j]);
+                            count++;
+                            break;
+                        }
+
+                    }
+                    if (count == 0)
+                    {
+                        updateddistnacelist.Add(everyNodesDistancWithinMaxHopDistanceinStartingphase[i]);
+                    }
+                    count = 0;
+                }
+                return updateddistnacelist;
+            }
+            else
+            {
+                return everyNodesDistancWithinMaxHopDistanceinStartingphase;
+            }
         }
 
         //Token with Distance as 0 intially before the traversal

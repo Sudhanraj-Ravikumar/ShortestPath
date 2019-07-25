@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShortestPath
@@ -330,6 +331,40 @@ namespace ShortestPath
         //    Vertices.Add(new Node(130, 25, 122, false));
 
 
+        //    return Vertices;
+        //}
+
+        //public IList<Node> GetGraphLayout()
+        //{
+        //    IList<Node> graph;
+        //    graph = GetVertices(20, 50, 50);
+
+        //    return graph;
+        //}
+        //private IList<Node> GetVertices(int NodeQuantity,int XMaximum,int YMaximum)
+        //{
+        //    Random XRandom = new Random();
+        //    Random YRandom = new Random();
+
+        //    int nodenumber = 1;
+        //    int X, Y;
+
+        //    for (int i = 0; i < NodeQuantity; i++)
+        //    {
+        //        Thread.Sleep(000);
+        //        X = XRandom.Next(XMaximum);
+        //        Thread.Sleep(100);
+        //        Y = YRandom.Next(YMaximum);
+        //        while (X==Y)
+        //        {
+        //            Y = YRandom.Next(YMaximum);
+        //        }
+
+
+        //        Vertices.Add(new Node(X, Y, nodenumber, false));
+        //        nodenumber++;
+
+        //    }
         //    return Vertices;
         //}
 

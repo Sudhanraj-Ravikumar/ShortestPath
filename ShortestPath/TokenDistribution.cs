@@ -180,7 +180,9 @@ namespace ShortestPath
             for (int i = 0; i < distinctVertices.Count; i++)
             {
                 Route.Add(distinctVertices[i]);
+
             }
+           Route =  Route.Distinct().ToList();
             return Route;
         }
 

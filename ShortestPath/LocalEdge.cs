@@ -1480,6 +1480,36 @@ namespace ShortestPath
         //    return LocalIncidentEdges;
 
         //}
+
+
+        //public List<Tuple<Node, Node>> GetGrapgEdges(IList<Node> vertices)
+        //{
+
+
+        //    int NodeMAxEdges = 4;
+
+        //    List<Tuple<Node, Node>> nodeswithedges = new List<Tuple<Node, Node>>();
+
+        //    nodeswithedges = GenerateRandomedges(vertices, NodeMAxEdges);
+
+        //    return nodeswithedges;
+        //}
+
+        //private List<Tuple<Node, Node>> GenerateRandomedges(IList<Node> vertices, int nodeMAxEdges)
+        //{
+        //    Random randomnumber = new Random();
+
+        //    for (int i = 0; i < vertices.Count; i++)
+        //    {
+        //        for (int j = 0; j < nodeMAxEdges; j++)
+        //        {
+        //            AddEdges(vertices[i], vertices[randomnumber.Next(vertices.Count)]);
+        //        }
+        //    }
+
+        //    return LocalIncidentEdges;
+        //}
+
         public List<Tuple<Node, Node>> AddEdges(Node vertex1, Node vertex2)
         {
             LocalIncidentEdges.Add(Tuple.Create(vertex1, vertex2));

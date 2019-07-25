@@ -57,6 +57,79 @@ namespace ShortestPath
             return shortpath;
 
         }
+
+        //Exact APSP from the paper
+        public List<Tuple<Node, Node, int, int>> ExactAPSPAlgorithm(Node SourceNode, Node DestinationNode)
+        {
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            
+            List<Token> EverynodesDistance = new List<Token>();
+            List<Token> SkeletonGraphs = new List<Token>();
+            List<Tuple<Node, Node, int, int>> shortpath = new List<Tuple<Node, Node, int, int>>();
+
+            int numberofmessages;
+            int numberofrounds;
+
+
+            //EverynodesDistance = GetEveryNodesDistance();
+            EveryNodesDistancWithinMaxHopDistance = ConstructExactAlgoSkeletonGraph();
+
+            double[,] InitialDistnaceMAtrix = new double[EverynodesDistance.Count, EverynodesDistance.Count];
+            double[,] FinalDistnaceMAtrix = new double[EverynodesDistance.Count, EverynodesDistance.Count];
+
+            //Construct a initial Distance Matrix
+            InitialDistnaceMAtrix = GetIntiialDistanceMAtrix(EveryNodesDistancWithinMaxHopDistance);
+            FinalDistnaceMAtrix = GetUpdatedShotestPAth(InitialDistnaceMAtrix,EveryNodesDistancWithinMaxHopDistance.Count);
+
+            SkeletonGraphs = getSkeletongroupofGraphs(SourceNode, DestinationNode, EveryNodesDistancWithinMaxHopDistance, out shortpath);
+
+            // number of message as paramenter study 
+            numberofmessages = GetNumberofTokens(EveryNodesDistancWithinMaxHopDistance);
+
+            //total rounds for parameter study
+            numberofrounds = GetTotalExactalgorithmRounds(shortpath);
+
+            //debugging to check the token counts
+            return shortpath;
+        }
+
+        private double[,] GetUpdatedShotestPAth(double[,] initialDistnaceMAtrix,int MatrizSize)
+        {
+            for (int k = 0; k < MatrizSize; k++)
+            {
+                for (int i = 0; i < MatrizSize; i++)
+                {
+                    for (int j = 0; j < MatrizSize; j++)
+                    {
+                        if (initialDistnaceMAtrix[i, k] + initialDistnaceMAtrix[k, j] < initialDistnaceMAtrix[i, j])
+                            initialDistnaceMAtrix[i, j] = initialDistnaceMAtrix[i, k] + initialDistnaceMAtrix[k, j];
+                    }
+                }
+            }
+
+            return initialDistnaceMAtrix;
+        }
+
+        //Initial Distance MAtrix 
+
+
+        private double[,] GetIntiialDistanceMAtrix(List<Token> everyNodesDistancWithinMaxHopDistance)
+        {
+            double[,] initialmatrix =  new double[everyNodesDistancWithinMaxHopDistance.Count,everyNodesDistancWithinMaxHopDistance.Count];
+            for (int i = 0; i < everyNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < everyNodesDistancWithinMaxHopDistance[i].Tokenmessagewithupdateddistance.Count; j++)
+                {
+                    initialmatrix[i, j] = everyNodesDistancWithinMaxHopDistance[i].Tokenmessagewithupdateddistance[j].Item5;
+                }
+            }
+
+            return initialmatrix;
+            
+        }
+
+        
+
         private List<Token> GetEveryNodesDistance()
         {
             TokenDistribution tokenDistribution = new TokenDistribution();
@@ -144,6 +217,39 @@ namespace ShortestPath
             return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
         }
 
+        //Exact Algorithm From Paper Construct Skeleton 
+
+        private List<Token> ConstructExactAlgoSkeletonGraph()
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EveryNodesDistancWithinMaxHopDistanceofMarkedNodes = new List<Token>();
+            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
+
+            tokencopies = tokenDistribution.TokenMultiplication();
+            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies);
+            EveryNodesDistancWithinMaxHopDistance = ConstructAlgoSkeletonGraph();
+
+            //Marked nodes threshold of number of copies 
+            // 20 =100 ; 50= 200
+            int TokenCopiesThreshold = 1000;
+
+            for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < tokencopieswithrespectivenodes.Count; j++)
+                {
+                    if (EveryNodesDistancWithinMaxHopDistance[i].SourceID == tokencopieswithrespectivenodes[j].Item1 && tokencopieswithrespectivenodes[j].Item2 <= TokenCopiesThreshold)
+                    {
+                        EveryNodesDistancWithinMaxHopDistanceofMarkedNodes.Add(EveryNodesDistancWithinMaxHopDistance[i]);
+                    }
+                }
+
+            }
+
+            return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
+        }
+
 
         /*node to nodes within the max hop distance (Exact)*/
         private List<Token> ConstructSkeletonGraph()
@@ -175,11 +281,111 @@ namespace ShortestPath
                        
                     }
                 }
+                
                 Token duplicate = new Token(token.SourceID, dupliccatetokenmessage);
                 TokenwithDistanceMessage.Add(duplicate);
                 
             }
             return TokenwithDistanceMessage;
+        }
+
+        //Construct Exact Algorithm From Graph from skeleton
+
+        private List<Token> ConstructAlgoSkeletonGraph()
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            Token token;
+
+            LocalEdge localEdge = new LocalEdge();
+            GraphLayout graphLayout = new GraphLayout();
+            IList<Node> Vertices = new List<Node>();
+            List<Token> TokenwithDistanceMessage = new List<Token>();
+            List<Tuple<Node, Node>> Edges = new List<Tuple<Node, Node>>();
+
+            List<int> veticesNumber = new List<int>();
+            
+
+            int MaxHopDistance = 20;
+
+            Vertices = graphLayout.GetGraphLayout();
+            Edges = localEdge.GetGrapgEdges(Vertices);
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                veticesNumber.Add(Vertices[i].ID);
+            }
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                List<Tuple<Node, Node, int, int,double>> dupliccatetokenmessage = new List<Tuple<Node, Node, int, int,double>>();
+                token = tokenDistribution.LocalBroadcast(Edges, Vertices[i]);
+
+                for (int j = 0; j < token.TokenMessage.Count; j++)
+                {
+                    //within 2 hop counts
+                    if (token.TokenMessage[j].Item4 < 3)
+                    {
+                        dupliccatetokenmessage.Add(Tuple.Create(token.TokenMessage[j].Item1,
+                            token.TokenMessage[j].Item2,token.TokenMessage[j].Item3,token.TokenMessage[j].Item4,
+                            (double)token.TokenMessage[j].Item3));
+
+                    }
+                    else
+                    {
+                        dupliccatetokenmessage.Add(Tuple.Create(token.TokenMessage[j].Item1,
+                            token.TokenMessage[j].Item2, token.TokenMessage[j].Item3, token.TokenMessage[j].Item4,
+                            double.PositiveInfinity));
+                    }
+                }
+                List<Tuple<Node, Node, int, int, double>> Uniquedupliccatetokenmessage = new List<Tuple<Node, Node, int, int, double>>();
+                Tuple<Node, Node, int, int, double> unique;
+                if (dupliccatetokenmessage?.Count != 0)
+                {
+                    for (int k = 0; k < veticesNumber.Count; k++)
+                    {
+                        if (veticesNumber[k] != dupliccatetokenmessage[0].Item1.ID)
+                        {
+                            unique = GetUniqueVeticesToken(veticesNumber[k], dupliccatetokenmessage);
+                            Uniquedupliccatetokenmessage.Add(unique);
+                        }
+                        else
+                        {
+                            Uniquedupliccatetokenmessage.Add(Tuple.Create(dupliccatetokenmessage[i].Item1,
+                                dupliccatetokenmessage[k].Item1, 0, 0, (double)0));
+                        }
+                    }
+                }
+                var orderedDuplicatemessage = Uniquedupliccatetokenmessage.OrderBy(x => x.Item2.ID).ToList();
+                Token duplicate = new Token(token.SourceID, orderedDuplicatemessage);
+                TokenwithDistanceMessage.Add(duplicate);
+
+            }
+            return TokenwithDistanceMessage;
+        }
+
+        private Tuple<Node, Node, int, int, double> GetUniqueVeticesToken(int v, List<Tuple<Node, Node, int, int, double>> dupliccatetokenmessage)
+        {
+            List<Tuple<Node, Node, int, int, double>> dup = new List<Tuple<Node, Node, int, int, double>>();
+            int count = 0;
+            for (int i = 0; i < dupliccatetokenmessage.Count; i++)
+            {
+                if (v==dupliccatetokenmessage[i].Item2.ID)
+                {
+                    count++;
+                    dup.Add(dupliccatetokenmessage[i]);
+                }
+            }
+
+            if (count > 1)
+            {
+                var min = dup.OrderBy(x => x.Item3).First();
+                return min;
+            }
+            else
+            {
+                return dup[0];
+            }
+            
         }
 
         //Grouping or forming skelton graph with max hop distance

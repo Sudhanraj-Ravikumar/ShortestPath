@@ -218,11 +218,43 @@ namespace ShortestPath
             //var time = stopwatch.Elapsed;
             //int i = 0;
 
-            //Cluster SSSP
+            ////Cluster SSSP
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //var ExactApspshortestpath = sSSP.ApprpxAprroxClusterAlgorithm(Sourcenode, Destinationnode);
+
+            ////foreach (var item in ExactApspshortestpath)
+            ////{
+            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            ////}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            ////Recursive SSSP
+
+            //Stopwatch stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //var ExactApspshortestpath = sSSP.ApproximateRecursiveSSPAlgorithm(Sourcenode, Destinationnode);
+
+            ////foreach (var item in ExactApspshortestpath)
+            ////{
+            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            ////}
+            //stopwatch.Stop();
+            //var time = stopwatch.Elapsed;
+            //int i = 0;
+
+            //Min Edge Cover SSSP
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            var ExactApspshortestpath = sSSP.ApprpxAprroxClusterAlgorithm(Sourcenode, Destinationnode);
+            var ExactApspshortestpath = sSSP.ApprpxMinFLowSSPAlgorithm(Sourcenode, Destinationnode);
 
             //foreach (var item in ExactApspshortestpath)
             //{

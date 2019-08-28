@@ -85,13 +85,13 @@ namespace ShortestPath
 
 
         // each knows all its neighbours distance using local edges and the token is created with message of node to all nodes distance
-        public Token LocalBroadcast(List<Tuple<Node, Node>> Edges, Node Source)
+        public Token LocalBroadcast(List<Tuple<Node, Node>> edges, Node Source, IList<Node> vertices)
         {
-            GraphLayout graphLayout = new GraphLayout();
-            LocalEdge LocalEdge = new LocalEdge();
-            IList<Node> Vertices = new List<Node>();
-
             
+            IList<Node> Vertices = new List<Node>();
+            List<Tuple<Node, Node>> Edges = new List<Tuple<Node, Node>>();
+
+
             List<int> Route = new List<int>();
             Route.Add(Source.ID);
             List<Tuple<Node, Node, int, int>> VerticesWithUpdatedDistance = new List<Tuple<Node, Node, int,int>>(); // node to dnode , distance
@@ -99,9 +99,9 @@ namespace ShortestPath
 
             //Token TokenMessage;
             
-            Vertices = graphLayout.GetGraphLayout();
+            Vertices = vertices;
 
-            Edges = LocalEdge.GetGrapgEdges(Vertices);
+            Edges = edges;
 
             int HopCount = 1;
 
@@ -152,7 +152,7 @@ namespace ShortestPath
                     Route.Clear();
                 }
 
-                if (DistinctVertices.Count==20)
+                if (DistinctVertices.Count==Vertices.Count)
                 {
                     break;
                 }
@@ -284,13 +284,17 @@ namespace ShortestPath
 
         List<Tuple<int, bool>> RandomNumberList = new List<Tuple<int, bool>>();
         //Multpication of tokens Section
-        public List<Tuple<int, int>> TokenMultiplication()
+        public List<Tuple<int, int>> TokenMultiplication(IList<Node> nodes, List<Tuple<Node, Node>> Edges)
         {
             List<Token> Nodesiwthtokens = new List<Token>();
             List<Tuple<int, int>> Tokencounts = new List<Tuple<int, int>>(); // sourcdenode,token recieved from node, token copy number
+            IList<Node> Vertices;
+            List<Tuple<Node, Node>> edges = new List<Tuple<Node, Node>>();
 
+            Vertices = nodes;
+            edges = Edges;
             //list of nodes with tokens consisting of the distaces of all the nodes through local edges
-            Nodesiwthtokens = GetEveryNodesDistance();
+            Nodesiwthtokens = GetEveryNodesDistance(nodes,Edges);
 
             //get intitial radomnumber list 
             RandomNumberList = GetRandomNumberList(Nodesiwthtokens);
@@ -420,32 +424,32 @@ namespace ShortestPath
             }
             return InitialStageofRandomNumber;
         }
-        private List<Token> GetEveryNodesDistance()
+        private List<Token> GetEveryNodesDistance(IList<Node> nodes, List<Tuple<Node, Node>> edges)
         {
             TokenDistribution tokenDistribution = new TokenDistribution();
             Token token;
 
-            LocalEdge localEdge = new LocalEdge();
-            GraphLayout graphLayout = new GraphLayout();
+            
             IList<Node> Vertices = new List<Node>();
             List<Token> TokenwithDistanceMessage = new List<Token>();
             List<Tuple<Node, Node>> Edges = new List<Tuple<Node, Node>>();
 
 
 
-            Vertices = graphLayout.GetGraphLayout();
-            Edges = localEdge.GetGrapgEdges(Vertices);
+            Vertices = nodes;
+            Edges = edges;
 
             for (int i = 0; i < Vertices.Count; i++)
             {
-                token = tokenDistribution.LocalBroadcast(Edges, Vertices[i]);
+                token = tokenDistribution.LocalBroadcast(Edges, Vertices[i], Vertices);
                 TokenwithDistanceMessage.Add(token);
             }
             return TokenwithDistanceMessage;
         }
 
         //nodes with number of copies after token multplication 
-        public List<Tuple<int, int>> GetNumberofNodeswithTokenCopies(List<Tuple<int, int>> tokencopieslistaftermultipication)
+        public List<Tuple<int, int>> GetNumberofNodeswithTokenCopies(List<Tuple<int, int>> tokencopieslistaftermultipication,
+            IList<Node> nodes, List<Tuple<Node, Node>> Edges)
         {
             List<Tuple<int, int>> MultipleTokenCopiesList = new List<Tuple<int, int>>(tokencopieslistaftermultipication);
             List<Tuple<int, int>> TokenwithrespectivenumberofCopies = new List<Tuple<int, int>>();//token,copycount
@@ -453,7 +457,7 @@ namespace ShortestPath
             Tuple<int, int> TokenwithrespectivenumberofCopy;
             
             //list of nodes with tokens consisting of the distaces of all the nodes through local edges
-            Nodesiwthtokens = GetEveryNodesDistance();
+            Nodesiwthtokens = GetEveryNodesDistance(nodes,Edges);
 
             for (int i = 0; i < Nodesiwthtokens.Count; i++)
             {

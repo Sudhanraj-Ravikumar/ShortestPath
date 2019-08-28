@@ -26,7 +26,9 @@ namespace ShortestPath
             IList<Node> nodes = new List<Node>();
             GraphLayout graphLayout = new GraphLayout();
             nodes = graphLayout.GetGraphLayout(); //recomment
-            
+
+            List<Token> skeletongraph = new List<Token>();
+            List<Token> Constructedskeltongraph = new List<Token>();
 
             foreach (var item in nodes)
             {
@@ -37,12 +39,13 @@ namespace ShortestPath
             LocalEdge localEdge = new LocalEdge();
             Edges = localEdge.GetGrapgEdges(nodes); // recommment
 
-            Edges = localEdge.GetGrapgEdges(nodes);
+            //Edges = localEdge.GetGrapgEdges(nodes);
             //has to be recommented
 
             TokenDistribution tokenDistribution = new TokenDistribution();
 
-
+            //contruct a skeleton graph
+            Constructedskeltongraph = ConstructedSkeletonGraph(nodes, Edges);
 
             APSP aPSP = new APSP();
             Node Sourcenode, Destinationnode;
@@ -55,12 +58,14 @@ namespace ShortestPath
             Graph.Series["SourceNode"].Points.AddXY(Sourcenode.X, Sourcenode.Y);
             Graph.Series["DestinationNode"].Points.AddXY(Destinationnode.X, Destinationnode.Y);
 
-            foreach (var item in Edges)
+            if (Edges?.Count > 0)
             {
-                Graph.Series["Edges"].Points.AddXY(item.Item1.X, item.Item1.Y);
-                Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
+                foreach (var item in Edges)
+                {
+                    Graph.Series["Edges"].Points.AddXY(item.Item1.X, item.Item1.Y);
+                    Graph.Series["Edges"].Points.AddXY(item.Item2.X, item.Item2.Y);
+                }
             }
-
             // till here
 
             ////ExactAlgorithm
@@ -111,19 +116,19 @@ namespace ShortestPath
             //int i = 0;
 
             ////Exact SSSP
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            //Stopwatch stopwatches = new Stopwatch();
+            //stopwatches.Start();
 
             //var SSSPExactshortestpath = sSSP.ExactSSSP(Sourcenode, Destinationnode);
-            //foreach (var item in SSSPExactshortestpath)
-            //{
-            //    Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            ////foreach (var item in SSSPExactshortestpath)
+            ////{
+            ////    Graph.Series["ExactSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            //}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
+            ////}
+            //stopwatches.Stop();
+            //var timees = stopwatches.Elapsed;
+
 
             ////Approximate SSSP
             //Stopwatch stopwatch = new Stopwatch();
@@ -156,37 +161,37 @@ namespace ShortestPath
             ////var time = stopwatch.Elapsed;
             ////int i = 0;
 
-            ////Exact SSSP algorrithm from paper
+            //Exact SSSP algorrithm from paper
 
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            Stopwatch stopwatchesp = new Stopwatch();
+            stopwatchesp.Start();
 
-            //var SSSPApproximateshortestpath = sSSP.ExactSSSPAlgorithm(Sourcenode, Destinationnode);
-            ////foreach (var item in SSSPApproximateshortestpath)
-            ////{
-            ////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            var SSSPApproximateshortestpathesp = sSSP.ExactSSSPAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            ////}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
+            //}
+            stopwatchesp.Stop();
+            var time = stopwatchesp.Elapsed;
+
 
             //Approximate SSSP algorrithm from paper
 
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            Stopwatch stopwatchasp = new Stopwatch();
+            stopwatchasp.Start();
 
-            //var SSSPApproximateshortestpath = sSSP.ApproxSSSPAlgorithm(Sourcenode, Destinationnode);
-            ////foreach (var item in SSSPApproximateshortestpath)
-            ////{
-            ////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            var SSSPApproximateshortestpathasp = sSSP.ApproxSSSPAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            ////}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
+            //}
+            stopwatchasp.Stop();
+            var timeasp = stopwatchasp.Elapsed;
+            int i = 0;
 
             ////Approximate own algorithm new
             //Stopwatch stopwatch = new Stopwatch();
@@ -203,58 +208,26 @@ namespace ShortestPath
             //var time = stopwatch.Elapsed;
             //int i = 0;
 
-            ////Dijikitras algorithm new
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            //Dijikitras algorithm new
+            Stopwatch stopwatchdi = new Stopwatch();
+            stopwatchdi.Start();
 
-            //var SSSPApproximateshortestpath = sSSP.DijikitrasAlgorithm(Sourcenode, Destinationnode);
-            ////foreach (var item in SSSPApproximateshortestpath)
-            ////{
-            ////    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            var SSSPApproximateshortestpath = sSSP.DijikitrasAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
+            //foreach (var item in SSSPApproximateshortestpath)
+            //{
+            //    Graph.Series["ApproximateSSSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
 
 
-            ////}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
+            //}
+            stopwatchdi.Stop();
+            var timedi = stopwatchdi.Elapsed;
 
-            ////Cluster SSSP
 
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            //var ExactApspshortestpath = sSSP.ApprpxAprroxClusterAlgorithm(Sourcenode, Destinationnode);
+            //Cluster SSSP
 
-            ////foreach (var item in ExactApspshortestpath)
-            ////{
-            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
-
-            ////}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
-
-            ////Recursive SSSP
-
-            //Stopwatch stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            //var ExactApspshortestpath = sSSP.ApproximateRecursiveSSPAlgorithm(Sourcenode, Destinationnode);
-
-            ////foreach (var item in ExactApspshortestpath)
-            ////{
-            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
-            ////    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
-
-            ////}
-            //stopwatch.Stop();
-            //var time = stopwatch.Elapsed;
-            //int i = 0;
-
-            //Min Edge Cover SSSP
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var ExactApspshortestpath = sSSP.ApprpxMinFLowSSPAlgorithm(Sourcenode, Destinationnode);
+            Stopwatch stopwatchc = new Stopwatch();
+            stopwatchc.Start();
+            var ExactApspshortestpathcl = sSSP.ApprpxAprroxClusterAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
 
             //foreach (var item in ExactApspshortestpath)
             //{
@@ -262,9 +235,41 @@ namespace ShortestPath
             //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
 
             //}
-            stopwatch.Stop();
-            var time = stopwatch.Elapsed;
-            int i = 0;
+            stopwatchc.Stop();
+            var timec = stopwatchc.Elapsed;
+
+
+            //Recursive SSSP
+
+            Stopwatch stopwatchr = new Stopwatch();
+            stopwatchr.Start();
+            var ExactApspshortestpath = sSSP.ApproximateRecursiveSSPAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
+
+            //foreach (var item in ExactApspshortestpath)
+            //{
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            //}
+            stopwatchr.Stop();
+            var timer = stopwatchr.Elapsed;
+
+
+            //Min Edge Cover SSSP
+
+            Stopwatch stopwatchm = new Stopwatch();
+            stopwatchm.Start();
+            var ExactApspshortestpath1 = sSSP.ApprpxMinFLowSSPAlgorithm(Sourcenode, Destinationnode, Constructedskeltongraph);
+
+            //foreach (var item in ExactApspshortestpath)
+            //{
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item1.X, item.Item1.Y);
+            //    Graph.Series["ExactAPSP"].Points.AddXY(item.Item2.X, item.Item2.Y);
+
+            //}
+            stopwatchm.Stop();
+            var timem = stopwatchm.Elapsed;
+
 
             // debugging Section 
 
@@ -280,7 +285,69 @@ namespace ShortestPath
         {
 
         }
+        private List<Token> ConstructedSkeletonGraph(IList<Node> nodes, List<Tuple<Node, Node>> Edges)
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            List<Token> EveryNodesDistancWithinMaxHopDistance = new List<Token>();
+            List<Token> EveryNodesDistancWithinMaxHopDistanceofMarkedNodes = new List<Token>();
+            List<Tuple<int, int>> tokencopies = new List<Tuple<int, int>>();
+            List<Tuple<int, int>> tokencopieswithrespectivenodes = new List<Tuple<int, int>>();
 
+            tokencopies = tokenDistribution.TokenMultiplication(nodes, Edges);
+            tokencopieswithrespectivenodes = tokenDistribution.GetNumberofNodeswithTokenCopies(tokencopies,nodes,Edges);
+            EveryNodesDistancWithinMaxHopDistance = ConstructSkeletonGraph(nodes,Edges);
+
+            //Marked nodes threshold of number of copies
+            int TokenCopiesThreshold = 5000;
+
+            for (int i = 0; i < EveryNodesDistancWithinMaxHopDistance.Count; i++)
+            {
+                for (int j = 0; j < tokencopieswithrespectivenodes.Count; j++)
+                {
+                    if (EveryNodesDistancWithinMaxHopDistance[i].SourceID == tokencopieswithrespectivenodes[j].Item1 && tokencopieswithrespectivenodes[j].Item2 <= TokenCopiesThreshold)
+                    {
+                        EveryNodesDistancWithinMaxHopDistanceofMarkedNodes.Add(EveryNodesDistancWithinMaxHopDistance[i]);
+                    }
+                }
+
+            }
+
+            return EveryNodesDistancWithinMaxHopDistanceofMarkedNodes;
+        }
+        private List<Token> ConstructSkeletonGraph(IList<Node> nodes, List<Tuple<Node, Node>> edges)
+        {
+            TokenDistribution tokenDistribution = new TokenDistribution();
+            Token token;
+
+            
+            IList<Node> Vertices = new List<Node>();
+            List<Token> TokenwithDistanceMessage = new List<Token>();
+            List<Tuple<Node, Node>> Edges = new List<Tuple<Node, Node>>();
+
+            //int MaxHopDistance = 15;
+
+            Vertices = nodes;
+            Edges = edges;
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                List<Tuple<Node, Node, int, int>> dupliccatetokenmessage = new List<Tuple<Node, Node, int, int>>();
+                token = tokenDistribution.LocalBroadcast(Edges, Vertices[i],Vertices);
+
+                for (int j = 0; j < token.TokenMessage.Count; j++)
+                {
+                    //if (token.TokenMessage[j].Item3 < MaxHopDistance)
+                    //{
+                    dupliccatetokenmessage.Add(token.TokenMessage[j]);
+
+                    //}
+                }
+                Token duplicate = new Token(token.SourceID, dupliccatetokenmessage);
+                TokenwithDistanceMessage.Add(duplicate);
+
+            }
+            return TokenwithDistanceMessage;
+        }
         //private void Graph_Paint(object sender, PaintEventArgs e)
         //{
         //    GraphicsPath path = new GraphicsPath();
@@ -295,8 +362,8 @@ namespace ShortestPath
         //        path.AddLine(new Point(item.Item1.X, item.Item1.Y), new Point(item.Item2.X, item.Item2.Y));
         //        //path.AddLine(new Point(100, 200), new Point(100, 250));
         //    }
-            
-            
+
+
 
         //    penJoin.LineJoin = LineJoin.Bevel;
         //    e.Graphics.DrawPath(penJoin, path);
